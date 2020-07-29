@@ -1,6 +1,6 @@
 \documentclass[11pt]{article}
 
-
+\usepackage[spanish,activeacute]{babel}
 \usepackage{titlesec}
 \usepackage{graphicx}
 \usepackage{subcaption}
@@ -35,11 +35,12 @@
 	
 	
 	\section{Configuraci\'on previa}
-		Antes de comenzar a resolver los ejercicios configur\'e \texttt{vim} para editar archivos en C. Lo primero que hice fue configurar \texttt{vim}, para hacer esto abr\'i el archivo \texttt{\textasciitilde/.vimrc} que es el archivo de configuraci\'on de \texttt{vim}. Esaba vac\'io y le a\~nad\'i dos l\'ineas \texttt{set nocop} y \texttt{filetype plugin on}. Lo que hace el primer comando es desactivar el modo de compatibilidad. Este hace que algunas de las funciones de \texttt{vim} sean deshabilitadas o modificadas para que se comporte de manera similar a \texttt{vi}, el antecesor de \texttt{vim}. La segunda permite utlizar el plugin \texttt{filetype}.
+		Antes de comenzar a resolver los ejercicios configuramos \texttt{vim} para editar archivos en C. Para hacer esto abrimos el archivo \texttt{\textasciitilde/.vimrc} (en todo caso de no existir, hay que crearlo) que es el archivo de configuraci'on de \texttt{vim}. Estaba vac'io por lo que le le a'nad'imos dos l'ineas: \texttt{set nocp} y \texttt{filetype plugin on}. Lo que hace el primer comando es desactivar el modo de compatibilidad. 'Este hace que algunas de las funciones de \texttt{vim} sean deshabilitadas o modificadas para que se comporte de manera similar a \texttt{vi}, el antecesor de \texttt{vim}. La segunda permite utlizar el plugin \texttt{filetype}.
 		
-		Luego para asegurarme de tener todos los paquetes de \texttt{vim} utlic\'e los comandos \texttt{sudo apt-get install vim-gui-common} y \texttt{sudo apt-get install vim-runtime}. El primer paquete tuvo que instalarse demorando varios minutos por la velocidad de descarga abismal de los repositorios. El segundo, por el otro lado ya estaba instalado.
+		Luego para asegurarnos de tener todos los paquetes de \texttt{vim} utlizamos el comando \texttt{sudo apt-get install vim-gui-common vim-runtime}. El primer paquete tuvo que instalarse demorando varios minutos por la velocidad de descarga abismal de los repositorios. El segundo, por el otro lado ya estaba instalado en nuestro caso.
 		
-		Finalmente cre\'e el archivo de configuraci\'on para los archivos con extensi\'on \texttt{.c}, llamado \texttt{c.vim}. Para poder crearlo primero tuve que crear la carpeta \texttt{\textasciitilde/.vim/ftplugin}, que es donde se ponen los archivos de configuraci\'on. Luego abr\'i el mismo con vim y escrib\'i las configuraciones que quer\'ia usar.
+		Finalmente creamos el archivo de configuraci'on para los archivos con extensi'on \texttt{.c}, llamado \texttt{c.vim}. Para poder crearlo primero tuvimos que crear la carpeta \texttt{\textasciitilde/.vim/ftplugin}, que es donde se ponen los archivos de configuraci'on. Luego abrimos el mismo con \texttt{vim} y escribimos las configuraciones que quer'iamos usar.
+		
 		\begin{figure}[H]
 			\centering
 			\begin{subfigure}[b!]{0.7\linewidth}
