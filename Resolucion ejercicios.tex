@@ -7,6 +7,7 @@
 \usepackage{subfig}
 \usepackage{chngcntr}
 \usepackage{xcolor}
+\usepackage{listofitems}
 \usepackage[bottom]{footmisc}
 \usepackage[hidelinks]{hyperref}
 \usepackage[most]{tcolorbox}
@@ -35,10 +36,10 @@
 \definecolor{light-red}{RGB}{201, 60, 60}
 \definecolor{light-green}{RGB}{65, 181, 104}
 
-\newtcolorbox{code-box}{colback=white!75!gray,colframe=white!15!gray, fontupper=\linespread{1.15}\selectfont}%1.15
+\newtcolorbox{code-box}{colback=white!75!gray,colframe=white!15!gray, fontupper=\linespread{1.1}\selectfont}%1.15
 
-\newcommand{\codetext}[2]{{\Large \texttt{\textcolor{#1}{#2}}}}
-\newcommand{\imagecaption}[1]{\caption*{Los comandos de la imagen \ref{fig:#1}}}
+\newcommand{\codetext}[2]{\large\texttt{\textcolor{#1}{#2}}}
+\newcommand{\imagecaption}[1]{\vspace{-7pt}\caption*{\char91\ref{fig:#1}\char93}}
 
 
 \begin{document}
@@ -187,8 +188,8 @@
 		
 		Luego de hacer todo esto, el programa finalmente funcion'o y se ejecut'o de manera correcta y sin errores. Habiendo terminado decidimos que ya ten'iamos el suficiente conocimiento para intentar compilar un programa usando \texttt{make}.
 		
-	\subsection{Comandos usados}
-		A continuaci'on todos los comandos usados en esta secci'on.
+	\section{Comandos usados}
+		A continuaci'on se encuentran todos los comandos utilizados en este trabajo, correspondientes a las im'agenes presentadas.
 		
 		\begin{figure}[H]
 			\centering
@@ -249,7 +250,7 @@
 		\begin{figure}[H]
 			\centering
 			\begin{code-box}
-			\codetext{light-blue}{ld} \codetext{orange-desert-vim}{-o circulo /usr/lib/gcc-lib/i386-linux/ 2.95.2/collect2 -m elf\textunderscore\/i386 -dynamic-linker /lib/ld-linux.so.2 -o circulo /usr/lib/crt1.o /usr/lib/crti.o /usr/lib/ gcc-lib/i386-linux/2.95.2/crtbegin.o -L/usr/lib/gcc-lib/i386-linux/2.95.2} \codetext{light-red}{circulo.o }\codetext{orange-desert-vim}{-lgcc -lc -lgcc /usr/lib/gcc-lib/ i386-linux/2.95.2/crtend.o /usr/lib/crtn.o}
+			\codetext{light-blue}{ld} \codetext{orange-desert-vim}{-o circulo /usr/lib/gcc-lib/i386-linux/2.95.2/ collect2 -m elf\textunderscore{}i386 --dynamic-linker /lib/ld-linux.so.2 -o circulo /usr/lib/crt1.o /usr/lib/crti.o /usr/lib/gcc-lib/i386-linux/2.95.2/ crtbegin.o -L /usr/lib/gcc-lib/i386-linux/2.95.2} \codetext{light-red}{circulo.o }\codetext{orange-desert-vim}{-lgcc -lc -lgcc /usr/lib/gcc-lib/ i386-linux/2.95.2/crtend.o /usr/lib/crtn.o}
 			\end{code-box}
 			\imagecaption{first-ld-attempt}
 		\end{figure}
