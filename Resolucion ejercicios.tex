@@ -188,6 +188,97 @@
 		
 		Luego de hacer todo esto, el programa finalmente funcion'o y se ejecut'o de manera correcta y sin errores. Habiendo terminado decidimos que ya ten'iamos el suficiente conocimiento para intentar compilar un programa usando \texttt{make}.
 		
+		
+	\section{Compilando con make}
+	
+	Para poder llevar m'as a la pr'actica el conocimiento del funcionamiento de \texttt{make} y la compilaci'on de programas mediante makefiles, compilaremos \texttt{w3m}, un navegador web que funciona dentro de la terminal.
+	
+	Descargamos el c'odigo fuente\footnote{\url{https://sourceforge.net/projects/w3m/files/}}, los archivos necesarios para el proceso, y notamos que se encuentran en un archivo del tipo \texttt{.tar.gz}\footnote{Un archivo \texttt{.tar} es utilizado para almacenar m'ultiples archivos y directorios en un solo archivo. Y luego el sufijo \texttt{.gz} muestra que los contenidos de dicho se encuentran comprimidos, y la forma en que fueron comprimidos.}. Para extraer sus contenidos, podemos usar el comando \texttt{tar} de linux, aunque para ello primero debemos instalarlo usando \texttt{sudo apt-get install tar}. Hecho esto, el comando utilizado para extraer los archivos es \texttt{tar -xf w3m-0.5.3.tar.gz}, donde \texttt{-x} implica extraer los archivos, y \texttt{-f} dice que se ejecuten las acciones sobre un archivo cuya ruta se encuentra a continuaci'on de la opci'on. Por el nombre del archivo, es claro que la versi'on de \texttt{w3m} descargada es la \texttt{0.5.3}. Al descomprimir nos queda en el lugar de extracci'on, una carpeta llamada \texttt{w3m-0.5.3} con todos los archivos.
+	
+	Al abrir la carpeta, vemos la presencia de distintos archivos, entre ellos podemos notar algunos \texttt{.c} o \texttt{.h}, que como sabemos corresponden a c'odigo hecho en el lenguaje C. Para saber c'omo proceder, nos dirigimos como es habitual al archivo \texttt{README} presente. En 'el nos dice que nos dirijamos a la subcarpeta \texttt{doc} para las instrucciones en ingl'es. Vemos que all'i se encuentra otro \texttt{README} con una breve descripci'on del programa y las instrucciones dichas. Indica que primero ejecutemos el archivo \texttt{configure}, presente en la carpeta ra'iz, de la forma \texttt{./configure}. Aqu'i empiezan los problemas.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/g++_missing}
+		\caption{Primer intento de ejecuci'on de \texttt{configure}}
+	\end{figure}
+	
+	Al ejecutar configure, nos dice \texttt{C++ compiler cannot create executables}, es decir, como que el compilador de C++ no puede crear ejecutables, y tambi'en que para m'as detalles podemos revisar el archivo generado \texttt{config.log}. All'i se puede ver todo el historial de las acciones realizadas por \texttt{configure}, y notamos que verifica por la presencia de ciertos programas, que parecen ser todos compiladores de C++, pudiendo significar que no existe ninguno en la m'aquina.
+	
+	\begin{figure}[H]
+		\centering \captionsetup{justification=centering}
+		\includegraphics[width=.7\linewidth]{Images/Compile_w3m/g++_missing_log}
+		\caption{Contenidos de \texttt{configure.log} luego del primer intento de ejecuci'on de \texttt{configure}}
+	\end{figure}
+	
+	Instalamos entones el primero de entre los que prueba, \texttt{g++}, de la forma \texttt{sudo apt-get install g++}. Esta vez, al correr \texttt{configure} parece lograr mayor progreso que la anterior, pero de todas formas a'un la ejecuci'on presenta otro error: \texttt{configure: error: gc.h not found}.
+	
+	\begin{figure}[H]
+		\centering \captionsetup{justification=centering}
+		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/gc_missing}
+		\caption{Segundo intento de ejecuci'on de \texttt{configure}}
+	\end{figure}
+	
+	Estuvimos investigando este problema, viendo c'omo se puede obtener este archivo que parece faltar. Notamos que verifica por la existencia del archivo mencionado en m'ultiples rutas antes de mostrar el error. Luego de buscar un poco, parece ser lo que se llama el ``Garbage Collector'', que es lo que usan m'ultiples lenguajes de programaci'on como mecanismo para la gesti'on adecuada de la memoria, y as'i tanto reservar espacios de dicha memoria, liberarlos, tener cuenta del espacio libre y ocupado, e incluso la reorganizaci'on del mismo a fin de liberar el mayor espacio posible que pueda ser utilizado, compactando los espacios de memoria libres entre los ocupados, dejando la mayor cantidad contigua libre posible. 
+	
+	Despu'es de saltar mucho entre p'aginas investigando, llegamos a una con informaci'on detallada sobre las dependencias que uno puede instalar en Linux, en espec'ifico la de \texttt{libgc-dev}\footnote{\url{https://ubuntu.pkgs.org/16.04/ubuntu-main-amd64/libgc-dev_7.4.2-7.3_amd64.deb.html}} ya que vimos que contiene entre sus archivos, el archivo \texttt{gc.h} faltante. Entonces irectamente lo instalamos de la forma \texttt{sudo apt-get install libgc-dev}.
+	
+	Probamos nuevamente correr \texttt{configure}, y por lo que vimos, pareci'o finalizar sin inconvenientes.
+	
+	\begin{figure}[H]
+		\centering \captionsetup{justification=centering}
+		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/configure_successful}
+		\caption{Tercer intento (y correcto) de ejecuci'on de \texttt{configure}}
+	\end{figure}
+	
+	Dado esto, pudimos proceder al siguiente paso: correr el makefile para compilar, usando el comando \texttt{make} en el directorio ra'iz. Y como era de esperarse, hubo problemas tambi'en en este paso.
+	
+	\begin{figure}[H]
+		\centering \captionsetup{justification=centering}
+		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/libtinfo-dev_missing}
+		\caption{Primer intento de ejecuci'on del makefile}
+	\end{figure}
+	
+	Viendo que el compilador no pudo encontrar las referencias de una serie de funciones utilizadas como \texttt{\textcolor{darkgray}{tputstring}} y otros con nombres similares, luego de buscar un poco, 'estas podr'ian estar presentes en el paquete \texttt{libtinfo-dev}, el cual instalamos de la forma \texttt{sudo apt-get install libtinfo-dev}. Probamos nuevamente entonces correr \texttt{make}.
+	
+	De todas formas, dada la rapidez con la que corri'o en comparaci'on a la anterior ejecuci'on, sumado a que se presentan los mismos errores que dicha vez, probamos en cambio primero probar con correr \texttt{configure} otra vez, y luego \texttt{make}.
+	
+	%No había hecho captura cuando pensé que si :(
+	
+	Comprobamos que el error antes experimentado desapareci'o, a cambio de otro nuevo:\enspace\verb|cannot stat `t-ja.gmo': No such file or directory| Nuevamente investigamos este error y encontramos en un foro que un error id'entico se le presenta a un usuario cuando quiso instalar otro paquete\footnote{ \url{https://www.linuxquestions.org/questions/linux-general-1/alsa-utils-failing-make-stage-cannot-stat-\%60t-ja-gmo\%27-i-think-i-need-xgettext-386546/}}, y que se puede resolver instalando el paquete \texttt{gettext}, de la forma \texttt{sudo apt-get install gettext}. Una vez instalado, al igual que antes volvemos a correr \texttt{configure} y \texttt{make}.
+	
+	\begin{figure}[H]
+		\centering \captionsetup{justification=centering}
+		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/make_successful}
+		\caption{Segundo intento (y correcto) de ejecuci'on del makefile}
+	\end{figure}
+	
+	Esta vez parece no haber ning'un error visible. Entonces procedemos al paso final, a lo que corremos \texttt{make install}.
+	
+	\begin{figure}[H]
+		\centering \captionsetup{justification=centering}
+		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/make-install_fail}
+		\caption{Primer intento fallido de ejecuci'on de \texttt{make install}}
+	\end{figure}
+	
+	Experimentamos una serie de \texttt{Permission denied}, por lo que lo m'as probable es que para correr este comando, requerimos permisos root. Por lo tanto, probamos agregar \texttt{sudo}, al comienzo del comando.
+	
+	\begin{figure}[H]
+		\centering \captionsetup{justification=centering}
+		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/make-install_successful}
+		\caption{Segundo intento (y correcto) de ejecuci'on de \texttt{make install}}
+	\end{figure}
+	
+	Ning'un error visible. 'Este habr'ia sido el 'ultimo paso de la instalaci'on, y deber'iamos ser capaces de correr \texttt{w3m} correctamente. Para probar su funcionamiento, probamos entrar a \url{www.google.com} con el comando \texttt{w3m www.google.com}.
+	
+	\begin{figure}[H]
+		\centering \captionsetup{justification=centering}
+		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/test_w3m}
+		\caption{Entrando a \url{www.google.com} con \texttt{w3m}}
+	\end{figure}
+	
+	¡Y efectivamente podemos visualizar el sitio web sin problemas! Pudimos compilar correctamente \texttt{w3m}.
+		
 	\section{Comandos usados}
 		A continuaci'on se encuentran todos los comandos utilizados en este trabajo, correspondientes a las im'agenes presentadas.
 		
