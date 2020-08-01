@@ -11,6 +11,27 @@
 \usepackage[bottom]{footmisc}
 \usepackage[hidelinks]{hyperref}
 \usepackage[most]{tcolorbox}
+\usepackage{listings}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{white},   
+    commentstyle=\color{light-green},
+    keywordstyle=\color{fuchsia-vim},
+    numberstyle=\tiny\color{darkgray},
+    stringstyle=\color{orange-desert-vim},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
 
 
 \setlength{\parindent}{1.0em}
@@ -263,6 +284,7 @@
 		\centering
 		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/g++_missing}
 		\caption{Primer intento de ejecuci'on de \texttt{configure}}
+		\label{fig:g++_missing}
 	\end{figure}
 	
 	Al ejecutar configure, nos dice \texttt{C++ compiler cannot create executables}, es decir, como que el compilador de C++ no puede crear ejecutables, y tambi'en que para m'as detalles podemos revisar el archivo generado \texttt{config.log}. All'i se puede ver todo el historial de las acciones realizadas por \texttt{configure}, y notamos que verifica por la presencia de ciertos programas, que parecen ser todos compiladores de C++, pudiendo significar que no existe ninguno en la m'aquina.
@@ -271,6 +293,7 @@
 		\centering \captionsetup{justification=centering}
 		\includegraphics[width=.7\linewidth]{Images/Compile_w3m/g++_missing_log}
 		\caption{Contenidos de \texttt{configure.log} luego del primer intento de ejecuci'on de \texttt{configure}}
+		\label{fig:g++_missing_log}
 	\end{figure}
 	
 	Instalamos entones el primero de entre los que prueba, \texttt{g++}, de la forma \texttt{sudo apt-get install g++}. Esta vez, al correr \texttt{configure} parece lograr mayor progreso que la anterior, pero de todas formas a'un la ejecuci'on presenta otro error: \texttt{configure: error: gc.h not found}.
@@ -279,6 +302,7 @@
 		\centering \captionsetup{justification=centering}
 		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/gc_missing}
 		\caption{Segundo intento de ejecuci'on de \texttt{configure}}
+		\label{fig:gc_missing}
 	\end{figure}
 	
 	Estuvimos investigando este problema, viendo c'omo se puede obtener este archivo que parece faltar. Notamos que verifica por la existencia del archivo mencionado en m'ultiples rutas antes de mostrar el error. Luego de buscar un poco, parece ser lo que se llama el ``Garbage Collector'', que es lo que usan m'ultiples lenguajes de programaci'on como mecanismo para la gesti'on adecuada de la memoria, y as'i tanto reservar espacios de dicha memoria, liberarlos, tener cuenta del espacio libre y ocupado, e incluso la reorganizaci'on del mismo a fin de liberar el mayor espacio posible que pueda ser utilizado, compactando los espacios de memoria libres entre los ocupados, dejando la mayor cantidad contigua libre posible. 
@@ -291,6 +315,7 @@
 		\centering \captionsetup{justification=centering}
 		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/configure_successful}
 		\caption{Tercer intento (y correcto) de ejecuci'on de \texttt{configure}}
+		\label{fig:configure_successful}
 	\end{figure}
 	
 	Dado esto, pudimos proceder al siguiente paso: correr el makefile para compilar, usando el comando \texttt{make} en el directorio ra'iz. Y como era de esperarse, hubo problemas tambi'en en este paso.
@@ -299,6 +324,7 @@
 		\centering \captionsetup{justification=centering}
 		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/libtinfo-dev_missing}
 		\caption{Primer intento de ejecuci'on del makefile}
+		\label{fig:libtinfo-dev_missing}
 	\end{figure}
 	
 	Viendo que el compilador no pudo encontrar las referencias de una serie de funciones utilizadas como \texttt{\textcolor{darkgray}{tputstring}} y otros con nombres similares, luego de buscar un poco, 'estas podr'ian estar presentes en el paquete \texttt{libtinfo-dev}, el cual instalamos de la forma \texttt{sudo apt-get install libtinfo-dev}. Probamos nuevamente entonces correr \texttt{make}.
@@ -313,6 +339,7 @@
 		\centering \captionsetup{justification=centering}
 		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/make_successful}
 		\caption{Segundo intento (y correcto) de ejecuci'on del makefile}
+		\label{fig:make_successful}
 	\end{figure}
 	
 	Esta vez parece no haber ning'un error visible. Entonces procedemos al paso final, a lo que corremos \texttt{make install}.
@@ -321,6 +348,7 @@
 		\centering \captionsetup{justification=centering}
 		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/make-install_fail}
 		\caption{Primer intento fallido de ejecuci'on de \texttt{make install}}
+		\label{fig:make-install_fail}
 	\end{figure}
 	
 	Experimentamos una serie de \texttt{Permission denied}, por lo que lo m'as probable es que para correr este comando, requerimos permisos root. Por lo tanto, probamos agregar \texttt{sudo}, al comienzo del comando.
@@ -329,6 +357,7 @@
 		\centering \captionsetup{justification=centering}
 		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/make-install_successful}
 		\caption{Segundo intento (y correcto) de ejecuci'on de \texttt{make install}}
+		\label{fig:make-install_successful}
 	\end{figure}
 	
 	Ning'un error visible. 'Este habr'ia sido el 'ultimo paso de la instalaci'on, y deber'iamos ser capaces de correr \texttt{w3m} correctamente. Para probar su funcionamiento, probamos entrar a \url{www.google.com} con el comando \texttt{w3m www.google.com}.
@@ -337,6 +366,7 @@
 		\centering \captionsetup{justification=centering}
 		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/test_w3m}
 		\caption{Entrando a \url{www.google.com} con \texttt{w3m}}
+		\label{fig:test_w3m}
 	\end{figure}
 	
 	¡Y efectivamente podemos visualizar el sitio web sin problemas! Pudimos compilar correctamente \texttt{w3m}.
@@ -436,6 +466,110 @@
 		
 		
 		
+		%%%%%%%%%%%%%%%%%
+		
+		%%%%%%%%%%%%% de acá para abajo 
+		
+		\begin{figure}[H]
+			\centering
+			\begin{code-box}
+				\codetext{light-blue}{wget }\codetext{orange-desert-vim}{-q -O} \codetext{light-red}{calc.h} \codetext{orange-desert-vim}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make
+				/polaca/calc.h}
+				
+				\codetext{light-blue}{wget }\codetext{orange-desert-vim}{-q -O} \codetext{light-red}{getch.c} \codetext{orange-desert-vim}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make
+				/polaca/getch.c}
+				
+			  	 \codetext{light-blue}{wget }\codetext{orange-desert-vim}{-q -O} \codetext{light-red}{getop.c} \codetext{orange-desert-vim}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make
+				/polaca/getop.c}
+				
+				\codetext{light-blue}{wget }\codetext{orange-desert-vim}{-q -O }\codetext{light-red}{main.c} \codetext{orange-desert-vim}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make
+				/polaca/main.c}
+				
+				\codetext{light-blue}{wget }\codetext{orange-desert-vim}{-q -O} \codetext{light-red}{stack.c} \codetext{orange-desert-vim}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make
+				/polaca/stack.c}
+			
+			\end{code-box}
+			\imagecaption{makefile-download}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\begin{code-box}
+				\codetext{light-blue}{gcc }\codetext{orange-desert-vim}{-o } \codetext{light-red}{main} \codetext{orange-desert-vim}{main.c getch.c getop.c stack.c}
+			\end{code-box}
+			\imagecaption{makefile-gcc-compile}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\begin{code-box}
+				\codetext{light-blue}{make } \codetext{light-red}{polaca}\newline
+                
+                		\codetext{light-blue}{make } \codetext{light-red}{clean}
+
+			\end{code-box}
+			\imagecaption{makefile-successful-compile}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\begin{code-box}
+				\codetext{light-blue}{./configure}
+
+			\end{code-box}
+			\imagecaption{g++_missing}
+		\end{figure} %g++_missing 
+		
+		%g++_missing_log, creo que no es necesario copiar nada acá
+		%gc_missing, lo mismo
+		%libtinfo-dev_missing, lo mismo
+		
+	    	\begin{figure}[H]
+			\centering
+			\begin{code-box}
+			    \codetext{light-blue}{sudo apt-get }\codetext{orange-desert-vim}{install }\codetext{light-red}{gettext}
+
+				\codetext{light-blue}{./configure}
+
+				\codetext{light-blue}{make}
+
+			\end{code-box}
+			\imagecaption{make_successful}
+		\end{figure} %make_successful 
+		
+		 \begin{figure}[H]
+			\centering
+			\begin{code-box}
+			    \codetext{light-blue}{make }\codetext{orange-desert-vim}{install}
+			\end{code-box}
+			\imagecaption{make-install_fail}
+		\end{figure} %make-install_fail
+		
+		\begin{figure}[H]
+			\centering
+			\begin{code-box}
+			    \codetext{light-blue}{sudo make }\codetext{orange-desert-vim}{install}
+			\end{code-box}
+			\imagecaption{make-install_successful}
+		\end{figure} %make-install_successful
+
+		\begin{figure}[H]
+			\centering
+			\begin{code-box}
+			    \codetext{light-blue}{w3m}\codetext{light-red}{www.google.com}
+			\end{code-box}
+			\imagecaption{w3m_test}
+		\end{figure} %w3m_test
+
+	\section{Archivos generados}
+		 A continuaci'on se encuentran todos los archivos que creamos para hacer este trabajo, correspondientes a las im'agenes presentadas.
+		 
+		 %% Acordate de subir los archivos
+		 
+		\lstset{style=mystyle}
+		\lstinputlisting[language=C, title=Archivo \texttt{circulo.c}]{circulo.c}
+		
+		\lstinputlisting[language=make, title=Makefile de \texttt{polaca}.]{makefile_pol.txt}
 		
 		
 		
