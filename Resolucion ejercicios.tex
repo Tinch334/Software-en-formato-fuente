@@ -73,9 +73,9 @@
 	
 	
 	\section{Configuraci\'on previa}
-		Antes de comenzar a resolver los ejercicios configuramos \texttt{vim} para editar archivos en C. Para hacer esto abrimos el archivo \texttt{\textasciitilde/.vimrc} (en todo caso de no existir, hay que crearlo) que es el archivo de configuraci'on de \texttt{vim}. Estaba vac'io por lo que le le a'nad'imos dos l'ineas: \texttt{set nocp} y \texttt{filetype plugin on}. Lo que hace el primer comando es desactivar el modo de compatibilidad. 'Este hace que algunas de las funciones de \texttt{vim} sean deshabilitadas o modificadas para que se comporte de manera similar a \texttt{vi}, el antecesor de \texttt{vim}. La segunda permite utlizar el plugin \texttt{filetype}.
+		Antes de comenzar a resolver los ejercicios configuramos \texttt{vim} para editar archivos en C. Para hacer esto abrimos el archivo \texttt{\textasciitilde/.vimrc} (en todo caso de no existir, hay que crearlo) que es el archivo de configuraci'on de \texttt{vim}. Estaba vac'io por lo que le a'nad'imos dos l'ineas: \texttt{set nocp} y \texttt{filetype plugin on}. Lo que hace el primer comando es desactivar el modo de compatibilidad. 'Este hace que algunas de las funciones de \texttt{vim} sean deshabilitadas o modificadas para que se comporte de manera similar a \texttt{vi}, el antecesor de \texttt{vim}. La segunda permite utlizar el plugin \texttt{filetype}.
 		
-		Luego para asegurarnos de tener todos los paquetes de \texttt{vim} utlizamos el comando \texttt{sudo apt-get install vim-gui-common vim-runtime}. El primer paquete tuvo que instalarse demorando varios minutos por la velocidad de descarga abismal de los repositorios. El segundo, por el otro lado ya estaba instalado en nuestro caso.
+		Luego para asegurarnos de tener todos los paquetes de \texttt{vim} utlizamos el comando \texttt{sudo apt-get install vim-gui-common vim-runtime}. El primer paquete tuvo que instalarse y demor'o varios minutos por la velocidad de descarga abismal de los repositorios. El segundo, por el otro lado ya estaba instalado en nuestro caso.
 		
 		Finalmente creamos el archivo de configuraci'on para los archivos con extensi'on \texttt{.c}, llamado \texttt{c.vim}. Para poder crearlo primero tuvimos que crear la carpeta \texttt{\textasciitilde/.vim/ftplugin}, que es donde se ponen los archivos de configuraci'on. Luego abrimos el mismo con \texttt{vim} y escribimos las configuraciones que quer'iamos usar.
 		
@@ -98,7 +98,7 @@
 		\end{figure}
 		
 	\subsection{Compilaci'on directa}
-		Una vez copiado el programa realizamos una compilaci'on directa para asegurarnos de que el programa funcionase correctamente. Para hacer esto usamos el comando \texttt{gcc -o circulo circulo.c}. Lo que hace el argumento \texttt{-o} es permitirnos especificar el nombre delarchivo de salida, pues si no, el archivo se nombra por defecto \texttt{a.out}.
+		Una vez copiado el programa realizamos una compilaci'on directa para asegurarnos de que funcionase correctamente. Para hacer esto usamos el comando \texttt{gcc -o circulo circulo.c}. Lo que hace el argumento \texttt{-o} es permitirnos especificar el nombre delarchivo de salida, pues si no, el archivo se nombra por defecto \texttt{a.out}.
 		
 		\begin{figure}[H]
 			\centering
@@ -120,7 +120,7 @@
     	En la figura \ref{fig:preproc_circ},
    		se observa el c'odigo preprocesado que obtuvimos como salida del comando \texttt{gcc -E circulo.c} (tambi'en se puede usar \texttt{cpp circulo.c}, que hace referencia directamente al preprocesador). Si prestamos atenci'on, la directiva antes mencionada no figura en esta salida. Adem'as, en la l'inea que en el c'odigo fuente dec'ia \texttt{\textcolor{darkgray}{area = PI * (radio * radio)}}, ahora dice \texttt{\textcolor{darkgray}{area = \textcolor{orange-desert-vim}{3.1416} * (radio * radio)}}. 
 
-   		En resumen, lo que hizo el preprocesador fue tomar esa definici'on que le indicamos en la directiva y coloc'o el valor de la constante en las partes del c'odigo en donde se hac'ia referencia a ella.
+   		En resumen, lo que hizo el preprocesador fue tomar esa definici'on que le indicamos en la directiva y colocar el valor de la constante en las partes del c'odigo en donde se hac'ia referencia a ella.
    		
    		\begin{figure}[H]
    			\centering
@@ -142,7 +142,7 @@
 	\subsubsection{Ensamblado}
 		Una vez realizado el compilado, procedemos a ensamblar el archivo. Es decir, transformar el archivo de assembler a c'odigo objeto, un archivo binario en lenguaje m'aquina. Hicimos esto con el comando \texttt{as -o circulo.o circulo.s}. Luego verificamos que haya funcionado revisando qu'e tipo de archivo era \texttt{circulo.o} haciendo uso del comando \texttt{file}.
 		
-		Aclarar que otra forma por la cual podr'iamos haber obtenido el archivo en cuesti'on ser'ia el comando \texttt{gcc -c circulo.c}, pero como se puede ver, toma directamente desde el c'odigo fuente, ya que adem'as realiza todas las etapas previas explicadas.
+		Otra forma por la cual podr'iamos haber obtenido el archivo en cuesti'on ser'ia utilizando el comando \texttt{gcc -c circulo.c}. Pero, como se puede ver, comenzar'ia a operar directamente desde el c'odigo fuente y realizar'ia todas las etapas previas explicadas.
 		
 		\begin{figure}[H]
 			\centering
@@ -151,12 +151,12 @@
 			\label{fig:complex-assembly}
 		\end{figure}
 	
-		Al estar el archivo conseguido en lenguaje m'aquina, no es texto en s'i que podamos ver con facilidad. En todo caso, podemos hacer uso de un comando como lo es \texttt{objdump -d circulo.o}, que intepreta y permite ver las instrucciones a la computadora contenidas en el archivo. Hay que aclarar que las posiciones de memoria a las que se refiere probablemente no sean correctas, ya que 'estas deben ser relacionadas en el pr'oximo paso, el enlazado, con las librer'ias externas utilizadas.
+		Como el archivo conseguido est'a en lenguaje m'aquina, no podemos verlo con facilidad. En todo caso, podemos hacer uso de un comando como lo es \texttt{objdump -d circulo.o}, que intepreta y permite ver las instrucciones a la computadora contenidas en el archivo. Hay que aclarar que las posiciones de memoria a las que se refiere probablemente no sean correctas, ya que 'estas deben ser relacionadas en el pr'oximo paso, el enlazado, con las librer'ias externas utilizadas.
 		
 	\subsubsection{Enlazado}
-		Finalmente enlazamos el archivo. El enlazado es el proceso mediante el cual se vincula y se incorpora al programa, las librerias que requiere para poder funcionar. Estas librerias est'an compuestas de c'odigo con funciones que uno utiliza en dicho programa. Por ejemplo, en \texttt{circulo.c} usamos funciones como \texttt{\textcolor{darkgray}{printf}}, el cual hace referencia a la libreria \texttt{stdio.h} (t'ipicamente se definir'ia al comienzo del programa de la forma \texttt{\textcolor{fuchsia-vim}{\#include}\textcolor{orange-desert-vim}{\char60stdio.h\char62}} pero, al ser com'unmente utilizado, es incorporado autom'aticamente por el compilador).
+		Finalmente enlazamos el archivo. El enlazado es el proceso mediante el cual se vinculan e incorporan al programa las librer'ias que requiere para poder funcionar. Estas librer'ias est'an compuestas de c'odigo con funciones que uno utiliza en dicho programa. Por ejemplo, en \texttt{circulo.c} usamos funciones como \texttt{\textcolor{darkgray}{printf}}, que hace referencia a la librer'ia \texttt{stdio.h} (t'ipicamente se definir'ia al comienzo del programa de la forma \texttt{\textcolor{fuchsia-vim}{\#include}\textcolor{orange-desert-vim}{\char60stdio.h\char62}} pero, al ser com'unmente utilizado, es incorporado autom'aticamente por el compilador).
 		
-		En este paso es donde nos encontramos con problemas. El comando que se da en el apunte no funciona. Al usarlo da varios errores indicando que las librerias usadas como argumentos no existen, as'i como tambi'en con algunas de las opciones del comando.
+		En este paso es donde nos encontramos con problemas. El comando que se da en el apunte no funciona. Al usarlo, reporta varios errores: indica que las librer'ias usadas como argumentos no existen y que algunas de las opciones del comando no son v'alidas.
 	
 		\begin{figure}[H]
 			\centering
@@ -165,11 +165,11 @@
 			\label{fig:first-ld-attempt}
 		\end{figure}
 		
-		Dado todos los errores que hab'ian, decidimos borrar todas las opciones innecesarias y probar nuevamente. Al hacer esto, los errores anteriores desaparecieron a cambio de uno nuevo. 'Este dec'ia ``\texttt{cannot find entry symbol \textunderscore\/start}'', el cual se traduce como ``\texttt{no se encuentra el simbolo de entrada \textunderscore\/start}''. Luego de algo de investigar descubrimos que este error se debe a que el verdadero punto de entrada\footnotemark\/ de un programa es \texttt{\textunderscore\/start} y no \texttt{main}, siendo que \texttt{\textunderscore\/start} simplemente redirige a 'el. Para solucionar esto usamos el argumento \texttt{--entry main} para especificar la funci'on \texttt{main} como el punto de entrada del programa.
+		Dado todos los errores que hab'ian, decidimos borrar todas las opciones innecesarias y probar nuevamente. Al hacer esto, los errores anteriores desaparecieron a cambio de uno nuevo. 'Este dec'ia ``\texttt{cannot find entry symbol \textunderscore\/start}'', que se traduce como ``\texttt{no se encuentra el s'imbolo de entrada \textunderscore\/start}''. Luego de algo de investigar descubrimos que este error se debe a que el verdadero punto de entrada\footnotemark\/ de un programa es \texttt{\textunderscore\/start} y no \texttt{main}, siendo que \texttt{\textunderscore\/start} simplemente redirige a 'el. Para solucionar esto, usamos el argumento \texttt{--entry main} que establece a la funci'on \texttt{main} como el punto de entrada del programa.
 		
 		\footnotetext{El punto de entrada de un programa es donde se ejecutan las primeras instrucciones y se pasa control al programa.}
 		
-		Una vez hechos estos cambios la funci'on no daba mas errores y el programa parec'ia estar listo para usar. A la hora de ejecutarlo, sin embargo, 'este no era reconocido como un programa ejecutable. Para asegurarnos de haber hecho todo correctamente revisamos que el archivo existiese as'i como tambi'en sus permisos, siendo 'estos correctos.
+		Una vez hechos estos cambios, la funci'on no dio m'as errores y el programa parec'ia estar listo para usar. A la hora de ejecutarlo, sin embargo, 'este no era reconocido como un programa ejecutable. Para asegurarnos de haber hecho todo correctamente revisamos que el archivo existiese as'i como tambi'en sus permisos, siendo 'estos correctos.
 		
 		\begin{figure}[H]
 			\centering
@@ -178,10 +178,10 @@
 			\label{fig:second-ld-attempt}
 		\end{figure}
 		
-		Dado que no pod'iamos ejecutar el programa decidimos intentar volver a a'nadir algunas de las opciones que no causaban ores. Primero volvimos a a'nadir las opciones \texttt{-m elf\textunderscore\/i386} y \texttt{--dynamic-linker /lib/ld-linux.so.2}. La primera opci'on define el objetivo del compilador\footnotemark. La segunda define la ubicaci'on del enlazador din'amico\footnotemark\/ a usar.
+		Dado que no pod'iamos ejecutar el programa decidimos intentar volver a a'nadir algunas de las opciones que no causaban errores. Primero volvimos a a'nadir las opciones \texttt{-m elf\textunderscore\/i386} y \texttt{--dynamic-linker /lib/ld-linux.so.2}. La primera define el objetivo del compilador\footnotemark\/ y, la segunda, la ubicaci'on del enlazador din'amico\footnotemark\/ a usar.
 		
 		\footnotetext{El objetivo del compilador es lo que determina que tipo de c'odigo objeto debe producir la funci'on.}
-		\footnotetext{Un enlazador din'amico o \textit{dynamic linker} es una forma de enlazar los archivos binarios que se necesitan para que el programa funcione. En este caso el c'odigo de las funciones se mantienen en la biblioteca y la hora de ejecutar el programa se cargan en memoria.}
+		\footnotetext{Un enlazador din'amico o \textit{dynamic linker} es una forma de enlazar los archivos binarios que se necesitan para que el programa funcione. En este caso, el c'odigo de las funciones se mantiene en la biblioteca y, a la hora de ejecutar el programa, se carga en memoria.}
 		
 		Luego de hacer estos cambios logramos ejecutar el programa, que parec'ia funcionar correctamente. Sin embargo, al final de 'este tuvimos el error \texttt{Segmentation fault}. Para tratar de averiguar de donde ven'ia el error decidimos debuggear el programa utilizando \texttt{gdb}.
 		
@@ -194,7 +194,7 @@
 			\label{fig:third-ld-attempt}
 		\end{figure}
 		
-		Cuando intentamos debuggear el programa nos encontramos con algo extra'no, y es que \texttt{gdb} no sab'ia de qu'e l'inea proven'ia el error. Esto nos llev'o a creer que proven'ia del enlazado del programa, y no del programa en s'i. Luego de buscar m'as todav'ia, encontramos el problema, y es que nos faltaba incluir las librerias que requer'ia el enlazador din'amico. Para entender por qu'e pasa esto hay que entender c'omo funciona el comando.
+		Cuando intentamos debuggear el programa nos encontramos con algo extra'no, y es que \texttt{gdb} no sab'ia de qu'e l'inea proven'ia el error. Esto nos llev'o a creer que proven'ia del enlazado del programa, y no del programa en s'i. Luego de buscar m'as todav'ia, encontramos el problema: nos faltaba incluir las librerias que requer'ia el enlazador din'amico. Para entender por qu'e pasa esto hay que entender c'omo funciona el comando.
 		
 		Lo primero que hace el comando es especificar la ubicaci'on del enlazador din'amico que requieren las dem'as librerias para acceder a las funciones din'amicas de C. Luego se incluyen otras tres librerias \texttt{/usr/lib/i386-linux-gnu/crt1.o}, \texttt{/usr/lib/i386-linux-gnu/crti.o} y \texttt{/usr/lib/i386-linux-gnu/crtn.o}. La primera es la librer'ia que tiene referencias a los archivos que requiere el enlazador (\texttt{/lib/libc.so.6} y \texttt{/usr/lib/libc\textunderscore\/nonshared.a}). Las otras dos se encargan de que existan \texttt{\textunderscore\/init} y \texttt{\textunderscore\/fini}, que son el c'odigo de inicializaci'on y finalizaci'on. Algo importante de recordar es que la ubicaci'on de las librerias puede cambiar dependiendo del sistema y la instalaci'on especifica. En nuestro caso, las encontramos buscando en \texttt{/usr/lib} y revisando todas las carpetas que parec'ian tener alguna relaci'on.
 	
@@ -212,14 +212,14 @@
 		
 	\section{Uso b'asico de make}
 	\subsection{Bases de make}
-		El programa \texttt{make} es una herramienta que permite manejar y mantener programas que constan de muchos archivos y tienen m'ultiples dependencias. Este evita tener que volver a recompilar el programa manualmente cada ves que se hacen cambios. Autom'aticamente detecta qu'e archivos necesitan ser recompilados y da las instrucciones para hacerlo, todo con un solo comando.
+		El programa \texttt{make} es una herramienta que permite manejar y mantener programas que constan de muchos archivos y tienen m'ultiples dependencias. Este evita tener que volver a recompilar el programa manualmente cada vez que se hacen cambios. Autom'aticamente detecta qu'e archivos necesitan ser recompilados y da las instrucciones para hacerlo, todo con un solo comando.
 		
-		La base del sistema esta un archivo llamado \texttt{makefile}, en este se almacenan las instrucciones que \texttt{make} utiliza a la hora de compilar un programa. Este contiene las reglas de dependencia, macros y las reglas impl'icitas. Las reglas de dependencia son reglas que definen que archivos son necesarios para crear un objetivo\footnotemark. Los macros son variables que almacenan un valor determinado, son muy `utiles para evitar repetir arguementos una gran cantidad de veces. Finalmente las reglas impl'icitas, estas son una manera de especificar reglas o condiciones usadas a la hora de compilar el programa.
+		La base del sistema esta un archivo llamado \texttt{makefile}, en el que se almacenan las instrucciones que \texttt{make} utiliza a la hora de compilar un programa. Este contiene las reglas de dependencia, macros y las reglas impl'icitas. Las reglas de dependencia son reglas que definen qu'e archivos son necesarios para crear un objetivo\footnotemark. Los macros son variables que almacenan un valor determinado, son muy `utiles para evitar repetir argumentos una gran cantidad de veces. Finalmente, las reglas impl'icitas son una manera de especificar reglas o condiciones usadas a la hora de compilar el programa.
 		
 		\footnotetext{Un objetivo es el nombre de un archivo(ejecutable o  objeto) o una acci'on de ese \texttt{makefile}.} 
 
 	\subsection{Compilaci'on simple con make}
-		Para asegurarnos de que sab'iamos usar make decidimos compilar el programa de ejemplo que aparece en el apunte, la calculadora con notaci'on polaca. Primero tuvimos que llevar los archivos a la m'aquina virtual, para hacer esto los descargamos de la p'agina web mencionada en el apunte utilizando \texttt{wget}.
+		Para asegurarnos de que sab'iamos usar make, decidimos compilar el programa de ejemplo que aparece en el apunte, la calculadora con notaci'on polaca. Primero tuvimos que llevar los archivos a la m'aquina virtual, para hacer esto los descargamos de la p'agina web mencionada en el apunte utilizando \texttt{wget}.
 		
 		\begin{figure}[H]
 				\centering
@@ -228,7 +228,7 @@
 				\label{fig:makefile-download}
 		\end{figure}
 		
-		Una vez descargados todos los archivos compilamos el programa sin utlizar \texttt{make} para asegurarnos de que este funcionase correctamente. Para hacer esto usamos \texttt{gcc}, dandole como argumento todos los archivos que necesitaban ser compilados.
+		Una vez descargados todos los archivos, compilamos el programa sin utlizar \texttt{make} para asegurarnos de que este funcionase correctamente. Para hacer esto usamos \texttt{gcc}, d'andole como argumento todos los archivos que necesitaban ser compilados.
 		
 		\begin{figure}[H]
 				\centering
@@ -237,7 +237,7 @@
 				\label{fig:makefile-gcc-compile}
 		\end{figure}
 	
-		Habiendo confirmado que el programa funcionaba creamos el archivo \texttt{makefile}, necesario para que make funcione. En este colocamos todas las reglas necesarias para compilar el programa. Estas especificaban que se deb'ia hacer con cada archivo. Para hacer esto usamos reglas de dependencia, estas siguen la siguiente estructura:
+		Habiendo confirmado que el programa funcionaba, creamos el archivo \texttt{makefile}, necesario para que make funcione. En este colocamos todas las reglas necesarias para compilar el programa. Estas especificaban qu'e se deb'ia hacer con cada archivo. Para hacer esto usamos reglas de dependencia, estas siguen la siguiente estructura:
 		
 		%Agrande un poco la letra por cuestiones esteticas. Cambienlo si no les parece.
 		\begin{figure}[H]
@@ -249,7 +249,7 @@
 			\end{code-box}
 		\end{figure}
 		
-		Donde \texttt{\textcolor{light-blue}{destino}} es el nombre del archivo a donde ira el resultado de las acciones de \texttt{\textcolor{light-red}{comando}}. Es importante notar que \texttt{\textcolor{light-blue}{destino}} tambi'en puede ser una acci'on que puede ser llamada desde el archivo o al usar \texttt{make}. Luego tenemos dependencias, son los archivos que se usan para crear \texttt{\textcolor{orange-desert-vim}{destino}} y deben estar presentes en la ubicaci'on especificada. Finalmente esta \texttt{\textcolor{light-red}{comando}}, son comandos enviados a el shell para ser interpretados. Pueden tambi'en ser acciones del archivo.
+		Donde \texttt{\textcolor{light-blue}{destino}} es el nombre del archivo a donde ir'a el resultado de las acciones de \texttt{\textcolor{light-red}{comando}}. Es importante notar que \texttt{\textcolor{light-blue}{destino}} tambi'en puede ser una acci'on que puede ser llamada desde el archivo o al usar \texttt{make}. Luego tenemos dependencias, son los archivos que se usan para crear \texttt{\textcolor{orange-desert-vim}{destino}} y deben estar presentes en la ubicaci'on especificada. Por 'ultimo, \texttt{\textcolor{light-red}{comando}} es una o varias instrucciones que son enviadas al shell para ser interpretadas. Pueden tambi'en ser acciones del archivo.
 		
 		\begin{figure}[H]
 			\centering
@@ -258,9 +258,9 @@
 			\label{fig:makefile}
 		\end{figure}
 		
-		Sabiendo como crear reglas de dependencia y con ayuda del apunte creamos el \texttt{makefile} necesario para compilar el programa. Tiene adem'as una acci'on para eliminar el archivo ejecutado y todos los archivos \texttt{.o} generados por la compilaci'on.
+		Sabiendo c'omo crear reglas de dependencia y con ayuda del apunte, creamos el \texttt{makefile} necesario para compilar el programa. Tiene adem'as una acci'on para eliminar el archivo ejecutado y todos los archivos \texttt{.o} generados por la compilaci'on.
 		
-		Al ejecutar el comando \texttt{make polaca} para compilar el programa, este se ejecut'o exitosamente y sin errores. Para verificar que todo funcionase correctamente realizamos la misma operación que habíamos realizado al compilar el programa la primera vez. Al ver que los resultados eran iguales y el programa funcionaba correctamente dimos por terminada la practica con \texttt{make}. Antes de pasar a compilar \texttt{w3m} borramos todos los archivos innecesarios con \texttt{make clean}.
+		Usando el comando \texttt{make polaca}, compilamos el programa exitosamente y sin errores. Para verificar que todo funcionase, realizamos la misma operaci'on que hab'iamos utilizado al compilar el programa la primera vez. Al ver que los resultados eran iguales y el programa era ejecutado correctamente, dimos por terminada la pr'actica con \texttt{make}. Antes de pasar a compilar \texttt{w3m}, borramos todos los archivos innecesarios con \texttt{make clean}.
 		
 		\begin{figure}[H]
 			\centering
@@ -274,11 +274,11 @@
 		
 	\section{Compilando con make}
 	
-	Para poder llevar m'as a la pr'actica el conocimiento del funcionamiento de \texttt{make} y la compilaci'on de programas mediante makefiles, compilaremos \texttt{w3m}, un navegador web que funciona dentro de la terminal.
+	Para poder llevar m'as a la pr'actica el conocimiento del funcionamiento de \texttt{make} y la compilaci'on de programas mediante makefiles, decidimos compilar \texttt{w3m}, un navegador web que funciona dentro de la terminal.
 	
-	Descargamos el c'odigo fuente\footnote{\url{https://sourceforge.net/projects/w3m/files/}}, los archivos necesarios para el proceso, y notamos que se encuentran en un archivo del tipo \texttt{.tar.gz}\footnote{Un archivo \texttt{.tar} es utilizado para almacenar m'ultiples archivos y directorios en un solo archivo. Y luego el sufijo \texttt{.gz} muestra que los contenidos de dicho se encuentran comprimidos, y la forma en que fueron comprimidos.}. Para extraer sus contenidos, podemos usar el comando \texttt{tar} de linux, aunque para ello primero debemos instalarlo usando \texttt{sudo apt-get install tar}. Hecho esto, el comando utilizado para extraer los archivos es \texttt{tar -xf w3m-0.5.3.tar.gz}, donde \texttt{-x} implica extraer los archivos, y \texttt{-f} dice que se ejecuten las acciones sobre un archivo cuya ruta se encuentra a continuaci'on de la opci'on. Por el nombre del archivo, es claro que la versi'on de \texttt{w3m} descargada es la \texttt{0.5.3}. Al descomprimir nos queda en el lugar de extracci'on, una carpeta llamada \texttt{w3m-0.5.3} con todos los archivos.
+	Descargamos el c'odigo fuente\footnote{\url{https://sourceforge.net/projects/w3m/files/}}, los archivos necesarios para el proceso, y notamos que se encontraban en un archivo del tipo \texttt{.tar.gz}\footnote{Un archivo \texttt{.tar} es utilizado para almacenar m'ultiples archivos y directorios en un solo archivo. Por otro lado, el sufijo \texttt{.gz}, muestra que los contenidos de dicho archivo se encuentran comprimidos y la forma en que fueron comprimidos.}. Para extraer sus contenidos, usamos el comando \texttt{tar} de linux, aunque para ello primero debimos instalarlo usando \texttt{sudo apt-get install tar}. Hecho esto, el comando que utilizamos fue \texttt{tar -xf w3m-0.5.3.tar.gz}, donde \texttt{-x} implica extraer los archivos, y \texttt{-f} dice que se ejecuten las acciones sobre un archivo cuya ruta se encuentra a continuaci'on de la opci'on. Por el nombre del archivo, es claro que la versi'on de \texttt{w3m} descargada es la \texttt{0.5.3}. Al descomprimir, nos qued'o en el lugar de extracci'on, una carpeta llamada \texttt{w3m-0.5.3} con todos los archivos.
 	
-	Al abrir la carpeta, vemos la presencia de distintos archivos, entre ellos podemos notar algunos \texttt{.c} o \texttt{.h}, que como sabemos corresponden a c'odigo hecho en el lenguaje C. Para saber c'omo proceder, nos dirigimos como es habitual al archivo \texttt{README} presente. En 'el nos dice que nos dirijamos a la subcarpeta \texttt{doc} para las instrucciones en ingl'es. Vemos que all'i se encuentra otro \texttt{README} con una breve descripci'on del programa y las instrucciones dichas. Indica que primero ejecutemos el archivo \texttt{configure}, presente en la carpeta ra'iz, de la forma \texttt{./configure}. Aqu'i empiezan los problemas.
+	Al abrir la carpeta, vimos la presencia de distintos archivos, entre ellos, podimos notar algunos de extensi'on \texttt{.c} o \texttt{.h}, que, como sabemos, corresponden a c'odigo hecho en el lenguaje C. Para saber c'omo proceder, nos dirigimos como es habitual al archivo \texttt{README} presente, que dec'ia que deb'iamos dirijirnos a la subcarpeta \texttt{doc} para ver las instrucciones en ingl'es. All'i se encontraba otro \texttt{README} con una breve descripci'on del programa y las instrucciones dichas. Indicaba que primero ejecut'aramos el archivo \texttt{configure}, presente en la carpeta ra'iz, de la forma \texttt{./configure}. Aqu'i empezaron los problemas.
 	
 	\begin{figure}[H]
 		\centering
@@ -287,7 +287,7 @@
 		\label{fig:g++_missing}
 	\end{figure}
 	
-	Al ejecutar configure, nos dice \texttt{C++ compiler cannot create executables}, es decir, como que el compilador de C++ no puede crear ejecutables, y tambi'en que para m'as detalles podemos revisar el archivo generado \texttt{config.log}. All'i se puede ver todo el historial de las acciones realizadas por \texttt{configure}, y notamos que verifica por la presencia de ciertos programas, que parecen ser todos compiladores de C++, pudiendo significar que no existe ninguno en la m'aquina.
+	Al ejecutar configure, se report'o el error ``\texttt{C++ compiler cannot create executables}'', es decir, el compilador de C++ no puede crear ejecutables. Tambi'en nos inform'o que para m'as detalles pod'iamos revisar el archivo generado \texttt{config.log}. All'i pudimos ver todo el historial de las acciones realizadas por \texttt{configure}, y notamos que verificaba por la presencia de ciertos programas, que parec'ian ser todos compiladores de C++, pudiendo significar que no exist'ia ninguno en la m'aquina.
 	
 	\begin{figure}[H]
 		\centering \captionsetup{justification=centering}
@@ -296,7 +296,7 @@
 		\label{fig:g++_missing_log}
 	\end{figure}
 	
-	Instalamos entones el primero de entre los que prueba, \texttt{g++}, de la forma \texttt{sudo apt-get install g++}. Esta vez, al correr \texttt{configure} parece lograr mayor progreso que la anterior, pero de todas formas a'un la ejecuci'on presenta otro error: \texttt{configure: error: gc.h not found}.
+	Instalamos entonces el primero de entre los que probaba, \texttt{g++}, de la forma \texttt{sudo apt-get install g++}. Esta vez, al correr \texttt{configure} pareci'o lograr mayor progreso que en el intento, pero, de todas formas, la ejecuci'on presentaba un error: \texttt{configure: error: gc.h not found}.
 	
 	\begin{figure}[H]
 		\centering \captionsetup{justification=centering}
@@ -305,9 +305,9 @@
 		\label{fig:gc_missing}
 	\end{figure}
 	
-	Estuvimos investigando este problema, viendo c'omo se puede obtener este archivo que parece faltar. Notamos que verifica por la existencia del archivo mencionado en m'ultiples rutas antes de mostrar el error. Luego de buscar un poco, parece ser lo que se llama el ``Garbage Collector'', que es lo que usan m'ultiples lenguajes de programaci'on como mecanismo para la gesti'on adecuada de la memoria, y as'i tanto reservar espacios de dicha memoria, liberarlos, tener cuenta del espacio libre y ocupado, e incluso la reorganizaci'on del mismo a fin de liberar el mayor espacio posible que pueda ser utilizado, compactando los espacios de memoria libres entre los ocupados, dejando la mayor cantidad contigua libre posible. 
+	Estuvimos investigando este problema, viendo c'omo se pod'ia obtener este archivo faltante. Notamos que verificaba por la existencia del archivo mencionado en m'ultiples rutas antes de mostrar el error. Luego de explorar un poco, entendimos que lo que buscaba el programa era algo llamado ``Garbage Collector'', que es lo que usan m'ultiples lenguajes de programaci'on como mecanismo para la gesti'on adecuada de la memoria, y as'i tanto reservar espacios de dicha memoria, liberarlos, tener cuenta del espacio libre y ocupado, e incluso la reorganizaci'on del mismo a fin de liberar el mayor espacio posible que pueda ser utilizado, compactando los espacios de memoria libres entre los ocupados, dejando la mayor cantidad contigua libre posible. 
 	
-	Despu'es de saltar mucho entre p'aginas investigando, llegamos a una con informaci'on detallada sobre las dependencias que uno puede instalar en Linux, en espec'ifico la de \texttt{libgc-dev}\footnote{\url{https://ubuntu.pkgs.org/16.04/ubuntu-main-amd64/libgc-dev_7.4.2-7.3_amd64.deb.html}} ya que vimos que contiene entre sus archivos, el archivo \texttt{gc.h} faltante. Entonces irectamente lo instalamos de la forma \texttt{sudo apt-get install libgc-dev}.
+	Despu'es de saltar mucho entre p'aginas investigando, llegamos a una con informaci'on detallada sobre las dependencias que uno puede instalar en Linux, en espec'ifico la de \texttt{libgc-dev}\footnote{\url{https://ubuntu.pkgs.org/16.04/ubuntu-main-amd64/libgc-dev_7.4.2-7.3_amd64.deb.html}} ya que vimos que contiene entre sus archivos, el archivo \texttt{gc.h} faltante. Lo instalamos de la forma \texttt{sudo apt-get install libgc-dev}.
 	
 	Probamos nuevamente correr \texttt{configure}, y por lo que vimos, pareci'o finalizar sin inconvenientes.
 	
@@ -327,13 +327,13 @@
 		\label{fig:libtinfo-dev_missing}
 	\end{figure}
 	
-	Viendo que el compilador no pudo encontrar las referencias de una serie de funciones utilizadas como \texttt{\textcolor{darkgray}{tputstring}} y otros con nombres similares, luego de buscar un poco, 'estas podr'ian estar presentes en el paquete \texttt{libtinfo-dev}, el cual instalamos de la forma \texttt{sudo apt-get install libtinfo-dev}. Probamos nuevamente entonces correr \texttt{make}.
+	El compilador no pudo encontrar las referencias de una serie de funciones utilizadas como \texttt{\textcolor{darkgray}{tputstring}} y otros con nombres similares. Luego de buscar un poco, averiguamos que 'estas podr'ian estar presentes en el paquete \texttt{libtinfo-dev}, el cual instalamos de la forma \texttt{sudo apt-get install libtinfo-dev}. Probamos nuevamente correr \texttt{make}.
 	
-	De todas formas, dada la rapidez con la que corri'o en comparaci'on a la anterior ejecuci'on, sumado a que se presentan los mismos errores que dicha vez, probamos en cambio primero probar con correr \texttt{configure} otra vez, y luego \texttt{make}.
+	De todas formas, dada la rapidez con la que corri'o en comparaci'on a la anterior ejecuci'on, sumado a que se presentaron los mismos errores que dicha vez, probamos en cambio primero probar con correr \texttt{configure} otra vez, y luego \texttt{make}.
 	
 	%No había hecho captura cuando pensé que si :(
 	
-	Comprobamos que el error antes experimentado desapareci'o, a cambio de otro nuevo:\enspace\verb|cannot stat `t-ja.gmo': No such file or directory| Nuevamente investigamos este error y encontramos en un foro que un error id'entico se le presenta a un usuario cuando quiso instalar otro paquete\footnote{ \url{https://www.linuxquestions.org/questions/linux-general-1/alsa-utils-failing-make-stage-cannot-stat-\%60t-ja-gmo\%27-i-think-i-need-xgettext-386546/}}, y que se puede resolver instalando el paquete \texttt{gettext}, de la forma \texttt{sudo apt-get install gettext}. Una vez instalado, al igual que antes volvemos a correr \texttt{configure} y \texttt{make}.
+	Comprobamos que el error antes experimentado desapareci'o, a cambio de otro nuevo:\enspace\verb|cannot stat `t-ja.gmo': No such file or directory| Nuevamente investigamos este error y encontramos en un foro que un error id'entico se le present'o a un usuario cuando quiso instalar otro paquete\footnote{ \url{https://www.linuxquestions.org/questions/linux-general-1/alsa-utils-failing-make-stage-cannot-stat-\%60t-ja-gmo\%27-i-think-i-need-xgettext-386546/}}, y que se pod'ia resolver instalando el paquete \texttt{gettext}, de la forma \texttt{sudo apt-get install gettext}. Una vez instalado, al igual que antes, volvimos a correr \texttt{configure} y \texttt{make}.
 	
 	\begin{figure}[H]
 		\centering \captionsetup{justification=centering}
@@ -342,7 +342,7 @@
 		\label{fig:make_successful}
 	\end{figure}
 	
-	Esta vez parece no haber ning'un error visible. Entonces procedemos al paso final, a lo que corremos \texttt{make install}.
+	Esta vez no hubo ning'un error visible. Procedimos al paso final, a lo que corrimos \texttt{make install}.
 	
 	\begin{figure}[H]
 		\centering \captionsetup{justification=centering}
@@ -351,7 +351,7 @@
 		\label{fig:make-install_fail}
 	\end{figure}
 	
-	Experimentamos una serie de \texttt{Permission denied}, por lo que lo m'as probable es que para correr este comando, requerimos permisos root. Por lo tanto, probamos agregar \texttt{sudo}, al comienzo del comando.
+	Experimentamos una serie de \texttt{Permission denied}, y dedujimos que lo m'as probable era que, para correr este comando, requer'iamos de permisos root. Por lo tanto, probamos agregar \texttt{sudo}, al comienzo del comando.
 	
 	\begin{figure}[H]
 		\centering \captionsetup{justification=centering}
@@ -360,7 +360,7 @@
 		\label{fig:make-install_successful}
 	\end{figure}
 	
-	Ning'un error visible. 'Este habr'ia sido el 'ultimo paso de la instalaci'on, y deber'iamos ser capaces de correr \texttt{w3m} correctamente. Para probar su funcionamiento, probamos entrar a \url{www.google.com} con el comando \texttt{w3m www.google.com}.
+	Ning'un error visible. 'Este habr'ia sido el 'ultimo paso de la instalaci'on, y deber'iamos ser capaces de correr \texttt{w3m} correctamente. Para probar su funcionamiento, tratamos de entrar a \url{www.google.com} con el comando \texttt{w3m www.google.com}.
 	
 	\begin{figure}[H]
 		\centering \captionsetup{justification=centering}
@@ -369,7 +369,9 @@
 		\label{fig:test_w3m}
 	\end{figure}
 	
-	¡Y efectivamente podemos visualizar el sitio web sin problemas! Pudimos compilar correctamente \texttt{w3m}.
+	¡Y efectivamente pudimos visualizar el sitio web sin problemas! Pudimos compilar correctamente \texttt{w3m}.
+		
+		% Adoro los finales felices :D 
 		
 	\section{Comandos usados}
 		A continuaci'on se encuentran todos los comandos utilizados en este trabajo, correspondientes a las im'agenes presentadas.
@@ -464,12 +466,6 @@
 			\imagecaption{fourth-ld-attempt}
 		\end{figure}
 		
-		
-		
-		%%%%%%%%%%%%%%%%%
-		
-		%%%%%%%%%%%%% de acá para abajo 
-		
 		\begin{figure}[H]
 			\centering
 			\begin{code-box}
@@ -518,7 +514,7 @@
 
 			\end{code-box}
 			\imagecaption{g++_missing}
-		\end{figure} %g++_missing 
+		\end{figure}
 		
 		%g++_missing_log, creo que no es necesario copiar nada acá
 		%gc_missing, lo mismo
@@ -535,7 +531,7 @@
 
 			\end{code-box}
 			\imagecaption{make_successful}
-		\end{figure} %make_successful 
+		\end{figure}
 		
 		 \begin{figure}[H]
 			\centering
@@ -543,7 +539,7 @@
 			    \codetext{light-blue}{make }\codetext{orange-desert-vim}{install}
 			\end{code-box}
 			\imagecaption{make-install_fail}
-		\end{figure} %make-install_fail
+		\end{figure}
 		
 		\begin{figure}[H]
 			\centering
@@ -551,7 +547,7 @@
 			    \codetext{light-blue}{sudo make }\codetext{orange-desert-vim}{install}
 			\end{code-box}
 			\imagecaption{make-install_successful}
-		\end{figure} %make-install_successful
+		\end{figure} 
 
 		\begin{figure}[H]
 			\centering
@@ -559,13 +555,11 @@
 			    \codetext{light-blue}{w3m}\codetext{light-red}{www.google.com}
 			\end{code-box}
 			\imagecaption{w3m_test}
-		\end{figure} %w3m_test
+		\end{figure} 
 
 	\section{Archivos generados}
 		 A continuaci'on se encuentran todos los archivos que creamos para hacer este trabajo, correspondientes a las im'agenes presentadas.
-		 
-		 %% Acordate de subir los archivos
-		 
+
 		\lstset{style=mystyle}
 		\lstinputlisting[language=C, title=Archivo \texttt{circulo.c}]{archivos/circulo.c}
 		
