@@ -1,0 +1,20 @@
+
+OBJETCS = stack.o getop.o getch.o
+CC = gcc
+
+polaca: main.o $(OBJETCS)
+		$(CC) -o polaca main.o $(OBJETCS)
+		
+
+main.o : main.c calc.h
+		$(CC) -c main.c
+stack.o : stack.c calc.h
+		$(CC) -c stack.c
+getop.o : getop.c calc.h
+		$(CC) -c getop.c
+getch.o : getch.c calc.h
+		$(CC) -c getch.c
+
+
+clean :
+		-rm polaca main.o $(OBJETCS)
