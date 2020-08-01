@@ -189,6 +189,68 @@
 		Luego de hacer todo esto, el programa finalmente funcion'o y se ejecut'o de manera correcta y sin errores. Habiendo terminado decidimos que ya ten'iamos el suficiente conocimiento para intentar compilar un programa usando \texttt{make}.
 		
 		
+	\section{Uso b'asico de make}
+	\subsection{Bases de make}
+		El programa \texttt{make} es una herramienta que permite manejar y mantener programas que constan de muchos archivos y tienen m'ultiples dependencias. Este evita tener que volver a recompilar el programa manualmente cada ves que se hacen cambios. Autom'aticamente detecta qu'e archivos necesitan ser recompilados y da las instrucciones para hacerlo, todo con un solo comando.
+		
+		La base del sistema esta un archivo llamado \texttt{makefile}, en este se almacenan las instrucciones que \texttt{make} utiliza a la hora de compilar un programa. Este contiene las reglas de dependencia, macros y las reglas impl'icitas. Las reglas de dependencia son reglas que definen que archivos son necesarios para crear un objetivo\footnotemark. Los macros son variables que almacenan un valor determinado, son muy `utiles para evitar repetir arguementos una gran cantidad de veces. Finalmente las reglas impl'icitas, estas son una manera de especificar reglas o condiciones usadas a la hora de compilar el programa.
+		
+		\footnotetext{Un objetivo es el nombre de un archivo(ejecutable o  objeto) o una acci'on de ese \texttt{makefile}.} 
+
+	\subsection{Compilaci'on simple con make}
+		Para asegurarnos de que sab'iamos usar make decidimos compilar el programa de ejemplo que aparece en el apunte, la calculadora con notaci'on polaca. Primero tuvimos que llevar los archivos a la m'aquina virtual, para hacer esto los descargamos de la p'agina web mencionada en el apunte utilizando \texttt{wget}.
+		
+		\begin{figure}[H]
+				\centering
+				\includegraphics[width=.9\linewidth]{Images/Seccion 2/S2.PNG}
+				\caption{Descargamos los archivos a la MV}
+				\label{fig:makefile-download}
+		\end{figure}
+		
+		Una vez descargados todos los archivos compilamos el programa sin utlizar \texttt{make} para asegurarnos de que este funcionase correctamente. Para hacer esto usamos \texttt{gcc}, dandole como argumento todos los archivos que necesitaban ser compilados.
+		
+		\begin{figure}[H]
+				\centering
+				\includegraphics[width=.9\linewidth]{Images/Seccion 2/S2 parte dos.PNG}
+				\caption{Compilamos el programa sin \texttt{make}}
+				\label{fig:makefile-gcc-compile}
+		\end{figure}
+	
+		Habiendo confirmado que el programa funcionaba creamos el archivo \texttt{makefile}, necesario para que make funcione. En este colocamos todas las reglas necesarias para compilar el programa. Estas especificaban que se deb'ia hacer con cada archivo. Para hacer esto usamos reglas de dependencia, estas siguen la siguiente estructura:
+		
+		%Agrande un poco la letra por cuestiones esteticas. Cambienlo si no les parece.
+		\begin{figure}[H]
+			\centering
+			\begin{code-box}
+				\codetext{light-blue}{\Large destino} : \codetext{orange-desert-vim}{ \Large dependencias}
+				
+				\qquad\codetext{light-red}{\Large comando}
+			\end{code-box}
+		\end{figure}
+		
+		Donde \texttt{\textcolor{light-blue}{destino}} es el nombre del archivo a donde ira el resultado de las acciones de \texttt{\textcolor{light-red}{comando}}. Es importante notar que \texttt{\textcolor{light-blue}{destino}} tambi'en puede ser una acci'on que puede ser llamada desde el archivo o al usar \texttt{make}. Luego tenemos dependencias, son los archivos que se usan para crear \texttt{\textcolor{orange-desert-vim}{destino}} y deben estar presentes en la ubicaci'on especificada. Finalmente esta \texttt{\textcolor{light-red}{comando}}, son comandos enviados a el shell para ser interpretados. Pueden tambi'en ser acciones del archivo.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=.9\linewidth]{Images/Seccion 2/S2 parte tres.PNG}
+			\caption{El \texttt{makefile} creado para compilar el programa}
+			\label{fig:makefile}
+		\end{figure}
+		
+		Sabiendo como crear reglas de dependencia y con ayuda del apunte creamos el \texttt{makefile} necesario para compilar el programa. Tiene adem'as una acci'on para eliminar el archivo ejecutado y todos los archivos \texttt{.o} generados por la compilaci'on.
+		
+		Al ejecutar el comando \texttt{make polaca} para compilar el programa, este se ejecut'o exitosamente y sin errores. Para verificar que todo funcionase correctamente realizamos la misma operación que habíamos realizado al compilar el programa la primera vez. Al ver que los resultados eran iguales y el programa funcionaba correctamente dimos por terminada la practica con \texttt{make}. Antes de pasar a compilar \texttt{w3m} borramos todos los archivos innecesarios con \texttt{make clean}.
+		
+		\begin{figure}[H]
+			\centering
+			\subfloat[Compilamos y ejecutamos el programa]{\includegraphics[width=.8\linewidth]{Images/Seccion 2/S2 parte cuatro}} \par
+			\subfloat[Borramos todos los archivos innecesarios]{\includegraphics[width=.8\linewidth]{Images/Seccion 2/S2 parte cinco}}
+			
+			\caption{El comando \texttt{make} en funcionamiento}
+			\label{fig:makefile-successful-compile}
+		\end{figure}
+		
+		
 	\section{Compilando con make}
 	
 	Para poder llevar m'as a la pr'actica el conocimiento del funcionamiento de \texttt{make} y la compilaci'on de programas mediante makefiles, compilaremos \texttt{w3m}, un navegador web que funciona dentro de la terminal.
@@ -304,18 +366,6 @@
 				\codetext{light-blue}{setlocal} \codetext{light-red}{smartindent}
 			\end{code-box}
 			\imagecaption{vim-setup}
-		\end{figure}
-		
-		\begin{figure}[H]
-			\centering
-			\begin{code-box}
-				\codetext{light-blue}{gcc} \codetext{orange-desert-vim}{-o circulo} \codetext{light-red}{circulo.c}
-				
-				\codetext{light-blue}{./circulo}
-				
-				\codetext{light-blue}{rm} \codetext{light-red}{circulo}
-			\end{code-box}
-			\imagecaption{basic-compilation}
 		\end{figure}
 		
 		\begin{figure}[H]
