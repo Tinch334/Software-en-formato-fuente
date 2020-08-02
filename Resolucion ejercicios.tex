@@ -252,7 +252,7 @@
 			\end{code-box}
 		\end{figure} \vspace{-12pt}
 		
-		Donde \texttt{\textcolor{light-blue}{destino}} es el nombre del archivo a donde ir'a el resultado de las acciones de \texttt{\textcolor{light-red}{comando}}. Es importante notar que \texttt{\textcolor{light-blue}{destino}} tambi'en puede ser una acci'on que puede ser llamada desde el archivo o al usar \texttt{make}. Luego tenemos \texttt{\textcolor{orange-desert-vim}{dependencias}}, que son los archivos que se usan para crear \texttt{\textcolor{light-blue}{destino}} y deben estar presentes en la ubicaci'on especificada. Por 'ultimo, en  \texttt{\textcolor{light-red}{comando}} de indican una o varias instrucciones que son enviadas al shell para ser interpretadas.
+		Donde \texttt{\textcolor{light-blue}{destino}} es el nombre del archivo a donde ir'a el resultado de las acciones de \texttt{\textcolor{light-red}{comando}}. Es importante notar que \texttt{\textcolor{light-blue}{destino}} tambi'en puede ser una acci'on que puede ser llamada desde el archivo o al usar \texttt{make}. Luego tenemos \texttt{\textcolor{orange-desert-vim}{dependencias}}, que son los archivos que se usan para crear \texttt{\textcolor{light-blue}{destino}} y deben estar presentes en la ubicaci'on especificada. Por 'ultimo, en  \texttt{\textcolor{light-red}{comando}} se indican una o varias instrucciones que son enviadas al shell para ser interpretadas.
 		% Pueden tambi'en ser acciones del archivo. % ¿Acciones del archivo?
 		
 		\begin{figure}[H]
@@ -278,104 +278,105 @@
 		
 	\section{Compilando con make}
 	
-	Para poder llevar m'as a la pr'actica el conocimiento del funcionamiento de \texttt{make} y la compilaci'on de programas mediante makefiles, decidimos compilar \texttt{w3m}, un navegador web que funciona dentro de la terminal.
-	
-	Descargamos el c'odigo fuente\footnote{\url{https://sourceforge.net/projects/w3m/files/}}, los archivos necesarios para el proceso, y notamos que se encontraban en un archivo del tipo \texttt{.tar.gz}\footnote{Un archivo \texttt{.tar} es utilizado para almacenar m'ultiples archivos y directorios en un solo archivo. Por otro lado, el sufijo \texttt{.gz}, muestra que los contenidos de dicho archivo se encuentran comprimidos y la forma en que fueron comprimidos.}. Para extraer sus contenidos, usamos el comando \texttt{tar} de linux, aunque para ello primero debimos instalarlo usando \texttt{sudo apt-get install tar}. Hecho esto, el comando que utilizamos fue \texttt{tar -xf w3m-0.5.3.tar.gz}, donde \texttt{-x} implica extraer los archivos, y \texttt{-f} dice que se ejecuten las acciones sobre un archivo cuya ruta se encuentra a continuaci'on de la opci'on. Por el nombre del archivo, es claro que la versi'on de \texttt{w3m} descargada es la \texttt{0.5.3}. Al descomprimir, nos qued'o en el lugar de extracci'on, una carpeta llamada \texttt{w3m-0.5.3} con todos los archivos.
-	
-	Al abrir la carpeta, vimos la presencia de distintos archivos, entre ellos, pudimos notar algunos de extensi'on \texttt{.c} o \texttt{.h}, que, como sabemos, corresponden a c'odigo hecho en el lenguaje C. Para saber c'omo proceder, nos dirigimos como es habitual al archivo \texttt{README} presente, que dec'ia que deb'iamos dirijirnos a la subcarpeta \texttt{doc} para ver las instrucciones en ingl'es. All'i se encontraba otro \texttt{README} con una breve descripci'on del programa y las instrucciones dichas. Indicaba que primero ejecut'aramos el archivo \texttt{configure}, presente en la carpeta ra'iz, de la forma \texttt{./configure}. Aqu'i empezaron los problemas.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/g++_missing}
-		\caption{Primer intento de ejecuci'on de \texttt{configure}}
-		\label{fig:g++_missing}
-	\end{figure}
-	
-	Al ejecutar \texttt{configure}, se report'o el error ``\texttt{C++ compiler cannot create executables}'', es decir, el compilador de C++ no puede crear ejecutables. Tambi'en nos inform'o que para m'as detalles pod'iamos revisar el archivo generado \texttt{config.log}. All'i pudimos ver todo el historial de las acciones realizadas por \texttt{configure}, y notamos que verificaba por la presencia de ciertos programas, que parec'ian ser todos compiladores de C++, implicando que no exist'ia ninguno en la m'aquina.
-	
-	\begin{figure}[H]
-		\centering \captionsetup{justification=centering}
-		\includegraphics[width=.7\linewidth]{Images/Compile_w3m/g++_missing_log}
-		\caption{Contenidos de \texttt{configure.log} luego del primer intento de ejecuci'on de \texttt{configure}}
-		\label{fig:g++_missing_log}
-	\end{figure}
-	
-	Instalamos entonces el primero de entre los que probaba, \texttt{g++}, de la forma \texttt{sudo apt-get install g++}. Esta vez, al correr \texttt{configure} pareci'o lograr mayor progreso que en el anterior intento pero, de todas formas, la ejecuci'on presentaba un error: \texttt{configure: error: gc.h not found}.
-	
-	\begin{figure}[H]
-		\centering \captionsetup{justification=centering}
-		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/gc_missing}
-		\caption{Segundo intento de ejecuci'on de \texttt{configure}}
-		\label{fig:gc_missing}
-	\end{figure}
-	
-	Estuvimos investigando este problema, viendo c'omo se pod'ia obtener este archivo faltante. Notamos que verificaba por la existencia del archivo mencionado en m'ultiples rutas antes de mostrar el error. Luego de explorar un poco, entendimos que lo que buscaba el programa era algo llamado ``Garbage Collector'', que es lo que usan m'ultiples lenguajes de programaci'on como mecanismo para la gesti'on adecuada de la memoria, y as'i tanto reservar espacios de dicha memoria, liberarlos, tener cuenta del espacio libre y ocupado, e incluso la reorganizaci'on del mismo a fin de liberar el mayor espacio posible que pueda ser utilizado, compactando los espacios de memoria libres entre los ocupados, dejando la mayor cantidad contigua libre posible. 
-	
-	Despu'es de saltar mucho entre p'aginas buscando, llegamos a una con informaci'on detallada sobre las dependencias que uno puede instalar en Linux, en espec'ifico la de \texttt{libgc-dev}\footnote{\url{https://ubuntu.pkgs.org/16.04/ubuntu-main-amd64/libgc-dev_7.4.2-7.3_amd64.deb.html}} ya que vimos que contiene entre sus archivos, el archivo \texttt{gc.h} faltante. Lo instalamos de la forma \texttt{sudo apt-get install libgc-dev}.
-	
-	Probamos nuevamente correr \texttt{configure}, y por lo que vimos, pareci'o finalizar sin inconvenientes.
-	
-	\begin{figure}[H]
-		\centering \captionsetup{justification=centering}
-		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/configure_successful}
-		\caption{Tercer intento (y correcto) de ejecuci'on de \texttt{configure}}
-		\label{fig:configure_successful}
-	\end{figure}
-	
-	Dado esto, pudimos proceder al siguiente paso: correr el \texttt{makefile} para compilar, usando el comando \texttt{make} en el directorio ra'iz. Y como era de esperarse, hubo problemas tambi'en en este paso.
-	
-	\begin{figure}[H]
-		\centering \captionsetup{justification=centering}
-		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/libtinfo-dev_missing}
-		\caption{Primer intento de ejecuci'on del makefile}
-		\label{fig:libtinfo-dev_missing}
-	\end{figure}
-	
-	El compilador no pudo encontrar las referencias de una serie de funciones utilizadas como \texttt{\textcolor{darkgray}{tputstring}} y otros con nombres similares. Luego de buscar un poco, averiguamos que 'estas podr'ian estar presentes en el paquete \texttt{libtinfo-dev}, el cual instalamos de la forma \texttt{sudo apt-get install libtinfo-dev}. Probamos nuevamente correr \texttt{make}.
-	
-	De todas formas, dada la rapidez con la que corri'o en comparaci'on a la anterior ejecuci'on, sumado a que se presentaron los mismos errores que dicha vez, probamos en cambio primero probar con correr \texttt{configure} otra vez, y luego \texttt{make}.
-	
-	%No había hecho captura cuando pensé que si :(
-	
-	Comprobamos que el error antes experimentado desapareci'o, a cambio de otro nuevo:\enspace\verb|cannot stat `t-ja.gmo': No such file or directory|. Nuevamente investigamos este error y encontramos en un foro que un error id'entico se le present'o a un usuario cuando quiso instalar otro paquete\footnote{ \url{https://www.linuxquestions.org/questions/linux-general-1/alsa-utils-failing-make-stage-cannot-stat-\%60t-ja-gmo\%27-i-think-i-need-xgettext-386546/}}, y que se pod'ia resolver instalando el paquete \texttt{gettext}, de la forma \texttt{sudo apt-get install gettext}. Una vez instalado, al igual que antes, volvimos a correr \texttt{configure} y \texttt{make}.
-	
-	\begin{figure}[H]
-		\centering \captionsetup{justification=centering}
-		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/make_successful}
-		\caption{Segundo intento (y correcto) de ejecuci'on del makefile}
-		\label{fig:make_successful}
-	\end{figure}
-	
-	Esta vez no hubo ning'un error visible. Procedimos al paso final, a lo que corrimos \texttt{make install}.
-	
-	\begin{figure}[H]
-		\centering \captionsetup{justification=centering}
-		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/make-install_fail}
-		\caption{Primer intento fallido de ejecuci'on de \texttt{make install}}
-		\label{fig:make-install_fail}
-	\end{figure}
-	
-	Experimentamos una serie de \texttt{Permission denied}, y dedujimos que lo m'as probable era que, para correr este comando, requer'iamos de permisos root. Por lo tanto, probamos agregar \texttt{sudo}, al comienzo del comando.
-	
-	\begin{figure}[H]
-		\centering \captionsetup{justification=centering}
-		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/make-install_successful}
-		\caption{Segundo intento (y correcto) de ejecuci'on de \texttt{make install}}
-		\label{fig:make-install_successful}
-	\end{figure}
-	
-	Ning'un error visible. 'Este habr'ia sido el 'ultimo paso de la instalaci'on, y deber'iamos ser capaces de correr \texttt{w3m} correctamente. Para probar su funcionamiento, tratamos de entrar a \url{www.google.com} con el comando \texttt{w3m www.google.com}.
-	
-	\begin{figure}[H]
-		\centering \captionsetup{justification=centering}
-		\includegraphics[width=.8\linewidth]{Images/Compile_w3m/test_w3m}
-		\caption{Entrando a \url{www.google.com} con \texttt{w3m}}
-		\label{fig:test_w3m}
-	\end{figure}
-	
-	¡Y efectivamente pudimos visualizar el sitio web sin problemas! La compilaci'on de \texttt{w3m} fue exitosa.
+		Para poder llevar m'as a la pr'actica el conocimiento del funcionamiento de \texttt{make} y la compilaci'on de programas mediante makefiles, decidimos compilar \texttt{w3m}, un navegador web que funciona dentro de la terminal.
 		
-		% Adoro los finales felices :D 
+		Descargamos el c'odigo fuente\footnote{\url{https://sourceforge.net/projects/w3m/files/}}, los archivos necesarios para el proceso, y notamos que se encontraban en un archivo del tipo \texttt{.tar.gz}\footnote{Un archivo \texttt{.tar} es utilizado para almacenar m'ultiples archivos y directorios en un solo archivo. Por otro lado, el sufijo \texttt{.gz}, muestra que los contenidos de dicho archivo se encuentran comprimidos y la forma en que fueron comprimidos.}. Para extraer sus contenidos, usamos el comando \texttt{tar} de linux, aunque para ello primero debimos instalarlo usando \texttt{sudo apt-get install tar}. Hecho esto, el comando que utilizamos fue \texttt{tar -xf w3m-0.5.3.tar.gz}, donde \texttt{-x} implica extraer los archivos, y \texttt{-f} dice que se ejecuten las acciones sobre un archivo cuya ruta se encuentra a continuaci'on de la opci'on. Por el nombre del archivo, es claro que la versi'on de \texttt{w3m} descargada es la \texttt{0.5.3}. Al descomprimir, nos qued'o en el lugar de extracci'on, una carpeta llamada \texttt{w3m-0.5.3} con todos los archivos.
+		
+		Al abrir la carpeta, vimos la presencia de distintos archivos, entre ellos, pudimos notar algunos de extensi'on \texttt{.c} o \texttt{.h}, que, como sabemos, corresponden a c'odigo hecho en el lenguaje C. Para saber c'omo proceder, nos dirigimos como es habitual al archivo \texttt{README} presente, que dec'ia que deb'iamos dirijirnos a la subcarpeta \texttt{doc} para ver las instrucciones en ingl'es. All'i se encontraba otro \texttt{README} con una breve descripci'on del programa y las instrucciones dichas. Indicaba que primero ejecut'aramos el archivo \texttt{configure}, presente en la carpeta ra'iz, de la forma \texttt{./configure}. Aqu'i empezaron los problemas.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=.8\linewidth]{Images/Compile_w3m/g++_missing}
+			\caption{Primer intento de ejecuci'on de \texttt{configure}}
+			\label{fig:g++_missing}
+		\end{figure}
+		
+		Al ejecutar \texttt{configure}, se report'o el error ``\texttt{C++ compiler cannot create executables}'', es decir, el compilador de C++ no puede crear ejecutables. Tambi'en nos inform'o que para m'as detalles pod'iamos revisar el archivo generado \texttt{config.log}. All'i pudimos ver todo el historial de las acciones realizadas por \texttt{configure}, y notamos que verificaba por la presencia de ciertos programas, que parec'ian ser todos compiladores de C++, implicando que no exist'ia ninguno en la m'aquina.
+		
+		\begin{figure}[H]
+			\centering \captionsetup{justification=centering}
+			\includegraphics[width=.7\linewidth]{Images/Compile_w3m/g++_missing_log}
+			\caption{Contenidos de \texttt{configure.log} luego del primer intento de ejecuci'on de \texttt{configure}}
+			\label{fig:g++_missing_log}
+		\end{figure}
+		
+		Instalamos entonces el primero de entre los que probaba, \texttt{g++}, de la forma \texttt{sudo apt-get install g++}. Esta vez, al correr \texttt{configure} pareci'o lograr mayor progreso que en el anterior intento pero, de todas formas, la ejecuci'on presentaba un error: \texttt{configure: error: gc.h not found}.
+		
+		\begin{figure}[H]
+			\centering \captionsetup{justification=centering}
+			\includegraphics[width=.8\linewidth]{Images/Compile_w3m/gc_missing}
+			\caption{Segundo intento de ejecuci'on de \texttt{configure}}
+			\label{fig:gc_missing}
+		\end{figure}
+		
+		Estuvimos investigando este problema, viendo c'omo se pod'ia obtener este archivo faltante. Notamos que verificaba por la existencia del archivo mencionado en m'ultiples rutas antes de mostrar el error. Luego de explorar un poco, entendimos que lo que buscaba el programa era algo llamado ``Garbage Collector'', que es lo que usan m'ultiples lenguajes de programaci'on como mecanismo para la gesti'on adecuada de la memoria, y as'i tanto reservar espacios de dicha memoria, liberarlos, tener cuenta del espacio libre y ocupado, e incluso la reorganizaci'on del mismo a fin de liberar el mayor espacio posible que pueda ser utilizado, compactando los espacios de memoria libres entre los ocupados, dejando la mayor cantidad contigua libre posible. 
+		
+		Despu'es de saltar mucho entre p'aginas buscando, llegamos a una con informaci'on detallada sobre las dependencias que uno puede instalar en Linux, en espec'ifico la de \texttt{libgc-dev}\footnote{\url{https://ubuntu.pkgs.org/16.04/ubuntu-main-amd64/libgc-dev_7.4.2-7.3_amd64.deb.html}} ya que vimos que contiene entre sus archivos, el archivo \texttt{gc.h} faltante. Lo instalamos de la forma \texttt{sudo apt-get install libgc-dev}.
+		
+		Probamos nuevamente correr \texttt{configure}, y por lo que vimos, pareci'o finalizar sin inconvenientes.
+		
+		\begin{figure}[H]
+			\centering \captionsetup{justification=centering}
+			\includegraphics[width=.8\linewidth]{Images/Compile_w3m/configure_successful}
+			\caption{Tercer intento (y correcto) de ejecuci'on de \texttt{configure}}
+			\label{fig:configure_successful}
+		\end{figure}
+		
+		Dado esto, pudimos proceder al siguiente paso: correr el \texttt{makefile} para compilar, usando el comando \texttt{make} en el directorio ra'iz. Y como era de esperarse, hubo problemas tambi'en en este paso.
+		
+		\begin{figure}[H]
+			\centering \captionsetup{justification=centering}
+			\includegraphics[width=.8\linewidth]{Images/Compile_w3m/libtinfo-dev_missing}
+			\caption{Primer intento de ejecuci'on del makefile}
+			\label{fig:libtinfo-dev_missing}
+		\end{figure}
+		
+		El compilador no pudo encontrar las referencias de una serie de funciones utilizadas como \texttt{\textcolor{darkgray}{tputstring}} y otros con nombres similares. Luego de buscar un poco, averiguamos que 'estas podr'ian estar presentes en el paquete \texttt{libtinfo-dev}, el cual instalamos de la forma \texttt{sudo apt-get install libtinfo-dev}. Probamos nuevamente correr \texttt{make}.
+		
+		De todas formas, dada la rapidez con la que corri'o en comparaci'on a la anterior ejecuci'on, sumado a que se presentaron los mismos errores que dicha vez, probamos en cambio primero probar con correr \texttt{configure} otra vez, y luego \texttt{make}.
+		
+		%No había hecho captura cuando pensé que si :(
+		%No pasa nada capo
+		
+		Comprobamos que el error antes experimentado desapareci'o, a cambio de otro nuevo:\enspace\verb|cannot stat `t-ja.gmo': No such file or directory|. Nuevamente investigamos este error y encontramos en un foro que un error id'entico se le present'o a un usuario cuando quiso instalar otro paquete\footnote{ \url{https://www.linuxquestions.org/questions/linux-general-1/alsa-utils-failing-make-stage-cannot-stat-\%60t-ja-gmo\%27-i-think-i-need-xgettext-386546/}}, y que se pod'ia resolver instalando el paquete \texttt{gettext}, de la forma \texttt{sudo apt-get install gettext}. Una vez instalado, al igual que antes, volvimos a correr \texttt{configure} y \texttt{make}.
+		
+		\begin{figure}[H]
+			\centering \captionsetup{justification=centering}
+			\includegraphics[width=.8\linewidth]{Images/Compile_w3m/make_successful}
+			\caption{Segundo intento (y correcto) de ejecuci'on del makefile}
+			\label{fig:make_successful}
+		\end{figure}
+		
+		Esta vez no hubo ning'un error visible. Procedimos al paso final, a lo que corrimos \texttt{make install}.
+		
+		\begin{figure}[H]
+			\centering \captionsetup{justification=centering}
+			\includegraphics[width=.8\linewidth]{Images/Compile_w3m/make-install_fail}
+			\caption{Primer intento fallido de ejecuci'on de \texttt{make install}}
+			\label{fig:make-install_fail}
+		\end{figure}
+	
+		Experimentamos una serie de \texttt{Permission denied}, y dedujimos que lo m'as probable era que, para correr este comando, requer'iamos de permisos root. Por lo tanto, probamos agregar \texttt{sudo}, al comienzo del comando.
+		
+		\begin{figure}[H]
+			\centering \captionsetup{justification=centering}
+			\includegraphics[width=.8\linewidth]{Images/Compile_w3m/make-install_successful}
+			\caption{Segundo intento (y correcto) de ejecuci'on de \texttt{make install}}
+			\label{fig:make-install_successful}
+		\end{figure}
+		
+		Ning'un error visible. 'Este habr'ia sido el 'ultimo paso de la instalaci'on, y deber'iamos ser capaces de correr \texttt{w3m} correctamente. Para probar su funcionamiento, tratamos de entrar a \url{www.google.com} con el comando \texttt{w3m www.google.com}.
+		
+		\begin{figure}[H]
+			\centering \captionsetup{justification=centering}
+			\includegraphics[width=.8\linewidth]{Images/Compile_w3m/test_w3m}
+			\caption{Entrando a \url{www.google.com} con \texttt{w3m}}
+			\label{fig:test_w3m}
+		\end{figure}
+		
+		¡Y efectivamente pudimos visualizar el sitio web sin problemas! La compilaci'on de \texttt{w3m} fue exitosa.
+		
+		% Adoro los finales felices :D
 		
 	\section{Comandos usados}
 		A continuaci'on se encuentran todos los comandos utilizados en este trabajo, correspondientes a las im'agenes presentadas.
@@ -473,20 +474,15 @@
 		\begin{figure}[H]
 			\centering
 			\begin{code-box}
-				\codetext{light-blue}{wget }\codetext{orange-desert-vim}{-q -O} \codetext{light-red}{calc.h} \codetext{orange-desert-vim}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make
-				/polaca/calc.h}
+				\codetext{light-blue}{wget} \codetext{orange-desert-vim}{-q -O calc.h} \codetext{light-red}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make/ polaca/calc.h}
 				
-				\codetext{light-blue}{wget }\codetext{orange-desert-vim}{-q -O} \codetext{light-red}{getch.c} \codetext{orange-desert-vim}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make
-				/polaca/getch.c}
+				\codetext{light-blue}{wget} \codetext{orange-desert-vim}{-q -O getch.c} \codetext{light-red}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make/ polaca/getch.c}
 				
-			  	 \codetext{light-blue}{wget }\codetext{orange-desert-vim}{-q -O} \codetext{light-red}{getop.c} \codetext{orange-desert-vim}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make
-				/polaca/getop.c}
+			  	\codetext{light-blue}{wget} \codetext{orange-desert-vim}{-q -O getop.c} \codetext{light-red}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make/ polaca/getop.c}
 				
-				\codetext{light-blue}{wget }\codetext{orange-desert-vim}{-q -O }\codetext{light-red}{main.c} \codetext{orange-desert-vim}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make
-				/polaca/main.c}
+				\codetext{light-blue}{wget} \codetext{orange-desert-vim}{-q -O  main.c} \codetext{light-red}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make/ polaca/main.c}
 				
-				\codetext{light-blue}{wget }\codetext{orange-desert-vim}{-q -O} \codetext{light-red}{stack.c} \codetext{orange-desert-vim}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make
-				/polaca/stack.c}
+				\codetext{light-blue}{wget }\codetext{orange-desert-vim}{-q -O stack.c} \codetext{light-red}{iie.fing.edu.uy/\textasciitilde{}vagonbar/gcc-make/ polaca/stack.c}
 			
 			\end{code-box}
 			\imagecaption{makefile-download}
@@ -495,7 +491,7 @@
 		\begin{figure}[H]
 			\centering
 			\begin{code-box}
-				\codetext{light-blue}{gcc }\codetext{orange-desert-vim}{-o }\codetext{light-red}{main }\codetext{orange-desert-vim}{main.c getch.c getop.c stack.c}
+				\codetext{light-blue}{gcc }\codetext{orange-desert-vim}{-o main }\codetext{light-red}{main.c getch.c getop.c stack.c}
 			\end{code-box}
 			\imagecaption{makefile-gcc-compile}
 		\end{figure}
@@ -503,7 +499,7 @@
 		\begin{figure}[H]
 			\centering
 			\begin{code-box}
-				\codetext{light-blue}{make } \codetext{light-red}{polaca}\newline
+				\codetext{light-blue}{make } \codetext{light-red}{polaca}
                 
                 		\codetext{light-blue}{make } \codetext{light-red}{clean}
 
