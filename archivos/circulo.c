@@ -1,10 +1,8 @@
-
 #define PI 3.1416
 
 main() {
-
 	float area, radio;
-	
+
 	radio = 10;
 	area = PI * (radio * radio);
 	printf("Circulo.\n");

@@ -1,4 +1,3 @@
-
 OBJETCS = stack.o getop.o getch.o
 CC = gcc
 
