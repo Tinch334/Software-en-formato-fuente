@@ -208,8 +208,112 @@
 			\label{fig:fourth-ld-attempt}
 		\end{figure}
 		
-		Luego de hacer todo esto, el programa finalmente funcion'o y se ejecut'o de manera correcta y sin errores. Habiendo terminado decidimos que ya ten'iamos el suficiente conocimiento para intentar compilar un programa usando \texttt{make}.
-		
+		Luego de hacer todo esto, el programa finalmente funcion'o y se ejecut'o de manera correcta y sin errores. 
+
+%%%%%%
+
+		Como contamos posteriormente, en el enlazado ``unimos'' todos los c'odigos objetos que forman nuestro programa para crear un 'unico archivo ejecutable. Pero no hay s'olo una forma de enlazar: existe el enlazado est'atico y el din'amico.
+
+		Cuando se usa la primera forma, la parte de la librer'ia que es utilizada en el programa (aunque es probable que alg'un pedazo m'as tambi'en), es copiada en el ejecutable. Es decir, si para crear el ejecutable de \texttt{circulo.c}, a'nadi'eramos la librer'ia \texttt{stdio} de forma est'atica, s'olo la definici'on de \texttt{printf} se copiar'ia, causando que el tama'no del ejecutable aumente. Por otro lado, este tipo de ``linkeo'' es 'util cuando se quiere compartir un archivo ejecutable, pero no sus librer'ias. Es decir, con s'olo enviar dicho archivo, el programa deber'ia funcionar.
+
+		En el enlazado din'amico, las librer'ias no son copiadas en el ejecutable, sino en la memoria RAM. El tama'no del archivo ejecutable no aumenta con respecto al c'odigo objeto del programa, pero s'i ocupa mucho m'as lugar en la memoria RAM que un mismo programa con un enlazado est'atico. 
+
+		Para probar y experimentar las diferencias entre el enlazado din'amico y el est'atico, nos pareci'o una buena idea usar un mismo programa, crear dos ejecutables (uno de cada forma) y compararlos.
+
+		El primer programa con el que hicimos esta prueba fue con \texttt{circulo.c}, que usamos al principio de este trabajo.
+
+		Para enlazarlo din'amicamente, hicimos lo que se muestra previamente en esta secci'on (nombrando al ejecutable como \texttt{circulo\_dinamico}), aunque tambi'en podr'iamos haber usado \texttt{gcc -o circulo\_dinamico circulo.c}, que toma el c'odigo fuente y realiza, adem'as del enlazado, todas las etapas anteriores (preprocesado, compilado y ensamblado).
+
+		Para enlazarlo est'aticamente, usamos un comando parecido al anterior: \texttt{gcc --static -o circulo\_estatico circulo.c}
+
+		Antes de proceder, verificamos que ambos ejecutables funcionaran correctamente (\ref{fig:andan}) y que fueran el tipo de archivo que dese'abamos. Para esto 'ultimo usamos los comandos \texttt{file circulo\_estatico} y \texttt{file circulo\_dinamico}, los resultados pueden verse en la imagen \ref{fig:bien_enlazados}.
+
+		\begin{figure}[H]
+			\centering
+   			\includegraphics{Images/Seccion 1/ambos_andan.png}
+    			\caption{Verificamos que ambos ejecutables anduvieran correctamente.}
+    			\label{fig:andan}
+		\end{figure}
+
+		\begin{figure}[H]
+    			\centering
+    			\includegraphics[scale=0.65]{Images/Seccion 1/bien_enlazados_.png}
+    			\caption{Verificamos que los ejecutables estuvieran bien enlazados.}
+    			\label{fig:bien_enlazados}
+		\end{figure}
+ 
+		Lo siguiente que hicimos fue observar la diferencia de tama'no. En la figura \ref{fig:bytes_circulos}, podemos ver la salida del listado con detalle de estos dos ejecutables. La quinta columna indica el tama'no que ocupa cada archivo en bytes. \texttt{circulo\_dinamico}, enlazado din'amicamente, pesa 3649 bytes. Mientras que \texttt{circulo\_estatico}, enlazado est'aticamente, 594184 bytes. Est'a m'as que confirmado que el programa con enlazado est'atico pesa m'as que el din'amico.
+
+% vieron que si quieren poner "de el" tienen que poner "del"? por qué no es lo mismo para "que el"? onda estaría piola decir "quel"
+
+		\begin{figure}[H]
+    			\centering
+    			\includegraphics[scale=0.8]{Images/Seccion 1/bytes_circulos.png}
+    			\caption{Observamos la diferencia de tama'no entre los ejecutables.}
+    			\label{fig:bytes_circulos}
+		\end{figure}
+
+		Por 'ultimo, comparamos cu'anta memoria RAM ocupaba la ejecuci'on de cada programa. Sab'iamos que el comando \texttt{ps} % "sabíamos quel comando...", queda mucho mejor
+brinda informaci'on variada sobre procesos que se est'an ejecutando en la m'aquina. Pero, como nuestro programa tardaba tan poco en finalizar, no lleg'abamos a verlo en la salida de este.
+
+		Empezamos a investigar sobre distintos programas que sirven para ver datos de un proceso finalizado o de un archivo que tarda muy poco en ejecutarse: time -v, tstime, valgrind... pero no logramos lo que quisimos hasta que recordamos que los procesos detenidos pueden verse en la salida de \texttt{ps}.
+
+		Tratamos de detener la ejecuci'on de alguno de los ejecutables %ejecución de ejecutables, cuánta variedad
+de \texttt{circulo.c}, pero ese programa tardaba aproximadamente tres segundos en finalizar y no logr'abamos pararlo. Si consegu'iamos un programa que hiciera m'as cosas (o menos, pero que tuviera un mayor tiempo de ejecuci'on), 'ibamos a poder detener el proceso y cumplir con nuestro objetivo.
+
+		Por suerte ten'iamos hecho un programa con un tiempo de ejecuci'on m'as grande (de aproximadamente doce segundos): \texttt{cosas\_innecesarias.c} \label{cosas_innecesarias} (pueden ver el c'odigo en la secci'on de \texttt{archivos generados}). Hicimos un procedimiento parecido al anterior: creamos dos ejecutables (\texttt{cos\_estaticas} -enlazado est'aticamente- y \texttt{cos\_dinamicas} -enlazado din'amicamente-) y comprobamos que ambos anduvieran.
+
+		\begin{figure}[H]
+    			\centering
+    			\includegraphics[scale=0.65]{Images/Seccion 1/innecesario.png}
+    			\label{fig:innecesario}
+		\end{figure}
+
+		Ejecutamos uno de dichos archivos, detuvimos el proceso con la combinaci'on de teclas \texttt{ctrl + Z} y repetimos lo mismo con el otro. Por 'ultimo, hicimos uso del comando \texttt{ps}, de la forma \texttt{ps auxT}. La salida de esa instrucci'on puede observarse en la imagen \ref{fig:ps}
+
+		\begin{figure}[H]
+    			\centering
+    			\includegraphics[scale=0.65]{Images/Seccion 1/detenidos.png}
+    			\caption{Detuvimos la ejecuci'on de los archivos.}
+    			\label{fig:detenidos}
+		\end{figure}
+
+		\begin{figure}[H]
+    			\centering
+    			\includegraphics[scale=0.65]{Images/Seccion 1/ps_.png}
+    			\caption{Salida del comando \texttt{ps auxT}.}
+    			\label{fig:ps}
+		\end{figure}
+
+		Como podemos observar, la salida de este comando tiene varios campos: usuario, identificador del proceso, porcentaje del CPU usado, porcentaje de la memoria utilizada, VSZ, RSS, terminal en donde se est'a llevando a cabo el proceso, estado (la ``T'' indica que los procesos est'an detenidos), hora de inicio, tiempo que lleva corriendo, comando que lo inici'o.
+
+		Los campos que nos interesan analizar son VSZ y RSS, relacionados con la memoria RAM. ```VSZ'' representa la ``Virtual Set Size'', que es la memoria RAM que hay disponible para llevar a cabo un proceso. Para calcularla, la m'aquina tiene en cuenta toda la memoria a la que el proceso podr'ia llegar a acceder: la que ocupan las bibliotecas din'amicas y la asignada (memoria que ocupan las variables utilizadas en un programa). %está bien esto?
+
+		\begin{table}[H]
+    			\centering
+    			\begin{tabular}{|c|}
+    			   	\hline VSZ = total\_bibliotecas\_dinamicas + total\_memoria\_asignada \\\hline
+		    	\end{tabular}
+    			\label{tab:my_label}
+		\end{table}
+
+		Por otro lado, la RSS es la memoria RAM que el proceso ya ocup'o. Cuando se calcula se tienen en cuenta la memoria que ocupan las partes de las librer'ias din'amicas que ya fueron cargadas en la RAM y las partes de la memoria asignada que est'a en uso, es decir, s'olo considera los espacios de memoria que tienen valores. %de esto tampoco estoy segura
+
+		\begin{table}[H]
+    			\centering
+    			\begin{tabular}{|c|}
+        			 \hline RSS = bibliotecas\_dinamicas\_cargadas + memoria\_asignada\_usada \\\hline
+    			\end{tabular}
+    			\label{tab:my_label}
+		\end{table}
+
+		Volviendo a la pr'actica: la VSZ de \texttt{cos\_dinamicas} es de 1724 KB, mientras que la de \texttt{cos\_estaticas} es de s'olo 812 KB.
+Esta diferencia est'a en las bibliotecas din'amicas: al ser el mismo programa, ambos archivos tienen la misma cantidad de memoria asignada, por lo que, en lo 'unico que pueden diferir es en la memoria que ocupan las bibliotecas din'amicas (que en el caso de \texttt{cos\_estaticas} es igual a cero porque est'a enlazado est'aticamente).  
+
+		Gracias a estos datos, podemos confirmar que, al ser ejecutado, un programa enlazado din'amicamente ocupa m'as memoria RAM que uno con enlazado est'atico.
+
+		Habiendo terminado, decidimos que ya ten'iamos conocimiento suficiente como para intentar compilar un programa usando \texttt{make}.
+
 		
 	\section{Uso b'asico de make}
 	\subsection{Bases de make}
@@ -574,6 +678,8 @@
 
 		\lstset{style=mystyle}
 		\lstinputlisting[language=C, title=\char91\ref{fig:circle-code}\char93\:{}Archivo \texttt{circulo.c}]{archivos/circulo.c}
+		
+		\lstinputlisting[language=C, title=\char91\ref{cosas_innecesarias}\char93\:{}Archivo \texttt{cosas\_innecesarias.c}]{archivos/cosas_innecesarias.c}
 		
 		\lstinputlisting[language=make, title=\char91\ref{fig:makefile}\char93\:{}Makefile de \texttt{polaca}.]{archivos/makefile_pol.txt}
 		
