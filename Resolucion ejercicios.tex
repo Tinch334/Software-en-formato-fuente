@@ -587,6 +587,76 @@ Esta diferencia est'a en las bibliotecas din'amicas: al ser el mismo programa, a
 			\imagecaption{fourth-ld-attempt}
 		\end{figure}
 		
+		%%%%%%
+		\begin{figure}[H]
+			\centering
+			\begin{code-box}
+			    	\codetext{light-blue}{gcc }\codetext{orange-desert-vim}{--static -o circulo\_estatico }\codetext{light-red}{circulo.c}
+                
+                		\codetext{light-blue}{./circulo\_estatico}\newline
+                	
+                		\codetext{light-blue}{gcc }\codetext{orange-desert-vim}{-o circulo\_dinamico }\codetext{light-red}{circulo.c}
+                
+               			 \codetext{light-blue}{./circulo\_dinamico}
+			\end{code-box}
+			\imagecaption{andan}
+		\end{figure}
+		
+    		\begin{figure}[H]
+			\centering
+			\begin{code-box}
+			 	\codetext{light-blue}{file }\codetext{light-red}{circulo\_estatico}
+    
+               			\codetext{light-blue}{file }\codetext{light-red}{circulo\_dinamico}
+                
+			\end{code-box}
+			\imagecaption{bien_enlazados}
+		\end{figure}
+		
+	   	 \begin{figure}[H]
+			\centering
+			\begin{code-box}
+				\codetext{light-blue}{ls }\codetext{orange-desert-vim}{-l }\codetext{light-red}{circulo\_estatico circulo\_dinamico}
+            		\end{code-box}
+			\imagecaption{bytes_circulos}
+		\end{figure}
+	
+    		\begin{figure}[H]
+			\centering
+			\begin{code-box}
+				\codetext{light-blue}{gcc }\codetext{orange-desert-vim}{--static -o cos\_estaticas }\codetext{light-red}{cosas\_innecesarias.c}
+        
+                  		\codetext{light-blue}{file }\codetext{light-red}{cos\_estaticas}\newline
+    
+                		\codetext{light-blue}{gcc }\codetext{orange-desert-vim}{-o cos\_dinamicas }\codetext{light-red}{cosas\_innecesarias.c}
+
+                		\codetext{light-blue}{file }\codetext{light-red}{cos\_dinamicas}
+			\end{code-box}
+			\imagecaption{innecesario}
+		\end{figure}
+    
+    		\begin{figure}[H]
+			\centering
+			\begin{code-box}
+				\codetext{light-blue}{./cos\_estaticas}
+			    
+                		\qquad\codetext{orange-desert-vim}{[Ctrl + Z]}\newline
+                
+                		\codetext{light-blue}{./cos\_dinamicas}
+                
+                 		\qquad\codetext{orange-desert-vim}{[Ctrl + Z]}
+			\end{code-box}
+			\imagecaption{detenidos}
+		\end{figure}
+
+     		\begin{figure}[H]
+        		\centering
+        		\begin{code-box}
+            			\codetext{light-blue}{ps }\codetext{orange-desert-vim}{auxT}
+        		\end{code-box}
+        	\imagecaption{ps}
+    		\end{figure}
+		
 		\begin{figure}[H]
 			\centering
 			\begin{code-box}
