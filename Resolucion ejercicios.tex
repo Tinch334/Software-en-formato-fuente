@@ -40,7 +40,6 @@
 \setlength{\belowcaptionskip}{-10pt}
 \counterwithin{figure}{section}
 \titlespacing*{\section}{0em}{3.5em}{1.5em}
-\setcounter{tocdepth}{1}
 \hypersetup{
 	linktoc=all
 }
@@ -61,7 +60,9 @@
 
 \newcommand{\codetext}[2]{\large\texttt{\textcolor{#1}{#2}}}
 \newcommand{\imagecaption}[1]{\vspace{-7pt}\caption*{\char91\ref{fig:#1}\char93}}
-
+\newcommand{\subsubsubsection}[1]{\paragraph{#1}\mbox{}}
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{5}
 
 \begin{document}
 	\pagenumbering{gobble}
@@ -155,6 +156,9 @@
 		Como el archivo conseguido est'a en lenguaje m'aquina, no podemos verlo con facilidad. En todo caso, podemos hacer uso de un comando como lo es \texttt{objdump -d circulo.o}, que intepreta y permite ver las instrucciones a la computadora contenidas en el archivo. Hay que aclarar que las posiciones de memoria a las que se refiere probablemente no sean correctas, ya que 'estas deben ser relacionadas en el pr'oximo paso, el enlazado, con las librer'ias externas utilizadas.
 		
 	\subsubsection{Enlazado}
+	
+		\subsubsubsection{Enlazando en la pr'actica}
+	
 		Finalmente enlazamos el archivo. El enlazado es el proceso mediante el cual se vinculan e incorporan al programa las librer'ias que requiere para poder funcionar. Estas librer'ias est'an compuestas de c'odigo con funciones que uno utiliza en dicho programa. Por ejemplo, en \texttt{circulo.c} usamos funciones como \texttt{\textcolor{darkgray}{printf}}, que hace referencia a la librer'ia \texttt{stdio.h} (t'ipicamente se definir'ia al comienzo del programa de la forma \texttt{\textcolor{fuchsia-vim}{\#include}\textcolor{orange-desert-vim}{\char60stdio.h\char62}} pero, al ser com'unmente utilizado, es incorporado autom'aticamente por el compilador).
 		
 		En este paso es donde nos encontramos con problemas. El comando que se da en el apunte no funciona. Al usarlo, reporta varios errores: indica que las librer'ias usadas como argumentos no existen y que algunas de las opciones del comando no son v'alidas.
@@ -212,11 +216,13 @@
 
 %%%%%%
 
-		Como contamos posteriormente, en el enlazado ``unimos'' todos los c'odigos objetos que forman nuestro programa para crear un 'unico archivo ejecutable. Pero no hay s'olo una forma de enlazar: existe el enlazado est'atico y el din'amico.
+		\subsubsubsection{Tipos de enlazado}
 
-		Cuando se usa la primera forma, la parte de la librer'ia que es utilizada en el programa (aunque es probable que alg'un pedazo m'as tambi'en), es copiada en el ejecutable. Es decir, si para crear el ejecutable de \texttt{circulo.c}, a'nadi'eramos la librer'ia \texttt{stdio} de forma est'atica, s'olo la definici'on de \texttt{printf} se copiar'ia, causando que el tama'no del ejecutable aumente. Por otro lado, este tipo de ``linkeo'' es 'util cuando se quiere compartir un archivo ejecutable, pero no sus librer'ias. Es decir, con s'olo enviar dicho archivo, el programa deber'ia funcionar.
+		Ahora bien, como demostramos, en el enlazado ``unimos'' todos los c'odigos objetos que forman nuestro programa (pueden ser varios en aplicaciones m'as complejas) para crear un 'unico archivo ejecutable. Pero no hay una 'unica forma de enlazar, pues existen dos tipos: el enlazado \textit{est'atico} y el \textit{din'amico} (este 'ultimo antes brevemente mencionado como \textit{dynamic linker}).
 
-		En el enlazado din'amico, las librer'ias no son copiadas en el ejecutable, sino en la memoria RAM. El tama'no del archivo ejecutable no aumenta con respecto al c'odigo objeto del programa, pero s'i ocupa mucho m'as lugar en la memoria RAM que un mismo programa con un enlazado est'atico. 
+		Cuando se usa la primera forma, las partes de las librer'ias que son utilizadas en el programa (aunque probablemente alg'un pedazo m'as tambi'en, seg'un lo que el enlazador determine qu'e no est'a definido dentro del programa), es copiada en el ejecutable. Es decir, si para crear el ejecutable de \texttt{circulo.c}, a'nadi'eramos la librer'ia \texttt{\textcolor{orange-desert-vim}{stdio.h}} de forma est'atica y s'olo us'aramos la funci'on \texttt{\textcolor{darkgray}{printf}}, 'unicamente se copiar'ia todo lo que est'e relacionado a dicha funci'on, lo que causa que el tama'no del ejecutable aumente. Este tipo de ``linkeo'' es 'util cuando se quiere compartir un archivo ejecutable, pero no sus librer'ias. Es decir, con s'olo enviar dicho archivo, el programa deber'ia funcionar correctamente.
+
+		En el enlazado din'amico, en cambio, las librer'ias no son copiadas en el ejecutable, sino que se hace referencia a ellas din'amicamente. Esto significa que dichas librer'ias deben estar presentes en el sistema al correr el ejecutable, y en dicho momento a su vez se las copia temporalmente en la memoria RAM. En comparaci'on con un enlazado est'atico, entonces, el tama'no del archivo ejecutable es mucho menor en lo que se refiere a c'odigo objeto del programa, pero s'i ocupa m'as espacio en la memoria RAM durante la ejecuci'on. Esto 'ultimo permite que las distintas partes del programa que usen una misma funci'on varias veces, hagan referencia a un mismo pedazo de c'odigo ya cargado en memoria en vez de leerlo del programa en s'i, es decir, evita la repetici'on de c'odigo causada en el enlazado est'atico.
 
 		Para probar y experimentar las diferencias entre el enlazado din'amico y el est'atico, nos pareci'o una buena idea usar un mismo programa, crear dos ejecutables (uno de cada forma) y compararlos.
 
@@ -226,19 +232,19 @@
 
 		Para enlazarlo est'aticamente, usamos un comando parecido al anterior: \texttt{gcc --static -o circulo\_estatico circulo.c}
 
-		Antes de proceder, verificamos que ambos ejecutables funcionaran correctamente (\ref{fig:andan}) y que fueran el tipo de archivo que dese'abamos. Para esto 'ultimo usamos los comandos \texttt{file circulo\_estatico} y \texttt{file circulo\_dinamico}, los resultados pueden verse en la imagen \ref{fig:bien_enlazados}.
+		Antes de proceder, verificamos que ambos ejecutables funcionaran correctamente (\ref{fig:stat-dyn-prog2}) y que fueran del tipo de archivo que dese'abamos. Para esto 'ultimo, usamos los comandos \texttt{file circulo\_estatico} y \texttt{file circulo\_dinamico}, cuyos resultados pueden verse en la imagen \ref{fig:bien_enlazados}.
 
 		\begin{figure}[H]
 			\centering
    			\includegraphics{Images/Seccion 1/ambos_andan.png}
-    			\caption{Verificamos que ambos ejecutables anduvieran correctamente.}
-    			\label{fig:andan}
+    		\caption{Verificamos que ambos ejecutables anduvieran correctamente}
+    		\label{fig:stat-dyn-prog2}
 		\end{figure}
 
 		\begin{figure}[H]
     			\centering
     			\includegraphics[scale=0.65]{Images/Seccion 1/bien_enlazados_.png}
-    			\caption{Verificamos que los ejecutables estuvieran bien enlazados.}
+    			\caption{Verificamos que los ejecutables estuvieran bien enlazados}
     			\label{fig:bien_enlazados}
 		\end{figure}
  
@@ -249,68 +255,57 @@
 		\begin{figure}[H]
     			\centering
     			\includegraphics[scale=0.8]{Images/Seccion 1/bytes_circulos.png}
-    			\caption{Observamos la diferencia de tama'no entre los ejecutables.}
+    			\caption{Observamos la diferencia de tama'no entre los ejecutables}
     			\label{fig:bytes_circulos}
 		\end{figure}
 
 		Por 'ultimo, comparamos cu'anta memoria RAM ocupaba la ejecuci'on de cada programa. Sab'iamos que el comando \texttt{ps} % "sabíamos quel comando...", queda mucho mejor
-brinda informaci'on variada sobre procesos que se est'an ejecutando en la m'aquina. Pero, como nuestro programa tardaba tan poco en finalizar, no lleg'abamos a verlo en la salida de este.
+		brinda informaci'on variada sobre procesos que se est'an ejecutando en la m'aquina. Pero, como nuestro programa tardaba tan poco en finalizar, no lleg'abamos a verlo en la salida de este.
 
-		Empezamos a investigar sobre distintos programas que sirven para ver datos de un proceso finalizado o de un archivo que tarda muy poco en ejecutarse: time -v, tstime, valgrind... pero no logramos lo que quisimos hasta que recordamos que los procesos detenidos pueden verse en la salida de \texttt{ps}.
+		Empezamos a investigar sobre distintas formas que sirven para ver datos de un proceso finalizado o de un archivo que tarda muy poco en ejecutarse: \texttt{time -v}, \texttt{tstime}, \texttt{valgrind}... pero no logramos lo que quer'iamos hasta que recordamos que los procesos detenidos pueden verse en la salida de \texttt{ps}.
 
 		Tratamos de detener la ejecuci'on de alguno de los ejecutables %ejecución de ejecutables, cuánta variedad
-de \texttt{circulo.c}, pero ese programa tardaba aproximadamente tres segundos en finalizar y no logr'abamos pararlo. Si consegu'iamos un programa que hiciera m'as cosas (o menos, pero que tuviera un mayor tiempo de ejecuci'on), 'ibamos a poder detener el proceso y cumplir con nuestro objetivo.
+		de \texttt{circulo.c}, pero 'este tardaba aproximadamente tres segundos en finalizar, y no logr'abamos pararlo. Si consegu'iamos un programa que hiciera m'as cosas (no tantas, pero que tuviera un mayor tiempo de ejecuci'on), 'ibamos a poder detener el proceso y cumplir con nuestro objetivo.
 
-		Por suerte ten'iamos hecho un programa con un tiempo de ejecuci'on m'as grande (de aproximadamente doce segundos): \texttt{cosas\_innecesarias.c} \label{cosas_innecesarias} (pueden ver el c'odigo en la secci'on de \texttt{archivos generados}). Hicimos un procedimiento parecido al anterior: creamos dos ejecutables (\texttt{cos\_estaticas} -enlazado est'aticamente- y \texttt{cos\_dinamicas} -enlazado din'amicamente-) y comprobamos que ambos anduvieran.
+		Por lo tanto, hicimos un programa con un tiempo de ejecuci'on m'as grande (de aproximadamente doce segundos): \texttt{cosas\_innecesarias.c} \label{cosas_innecesarias} (se puede ver el c'odigo en la secci'on de \texttt{\nameref{sec:archivos_generados}}). El procedimiento es parecido que con \texttt{circulo.c}: creamos dos ejecutables (\texttt{cos\_estaticas} -enlazado est'aticamente- y \texttt{cos\_dinamicas} -enlazado din'amicamente-) y comprobamos que ambos anduvieran.
 
 		\begin{figure}[H]
-    			\centering
+    			\centering \captionsetup{justification=centering}
     			\includegraphics[scale=0.65]{Images/Seccion 1/innecesario.png}
+    			\caption{Creamos los nuevos ejecutables y verificamos que estuvieran correctamente enlazados}
     			\label{fig:innecesario}
 		\end{figure}
 
-		Ejecutamos uno de dichos archivos, detuvimos el proceso con la combinaci'on de teclas \texttt{ctrl + Z} y repetimos lo mismo con el otro. Por 'ultimo, hicimos uso del comando \texttt{ps}, de la forma \texttt{ps auxT}. La salida de esa instrucci'on puede observarse en la imagen \ref{fig:ps}
+		Ejecutamos uno de dichos archivos, detuvimos el proceso con la combinaci'on de teclas \texttt{Ctrl+Z} y repetimos lo mismo con el otro. Por 'ultimo, hicimos uso del comando \texttt{ps}, de la forma \texttt{ps auxT}. La salida de esa instrucci'on puede observarse en la imagen \ref{fig:ps}.
 
 		\begin{figure}[H]
     			\centering
     			\includegraphics[scale=0.65]{Images/Seccion 1/detenidos.png}
-    			\caption{Detuvimos la ejecuci'on de los archivos.}
+    			\caption{Detuvimos la ejecuci'on de los dos ejecutables del programa}
     			\label{fig:detenidos}
 		\end{figure}
 
 		\begin{figure}[H]
     			\centering
     			\includegraphics[scale=0.65]{Images/Seccion 1/ps_.png}
-    			\caption{Salida del comando \texttt{ps auxT}.}
+    			\caption{Salida del comando \texttt{ps auxT}}
     			\label{fig:ps}
 		\end{figure}
 
-		Como podemos observar, la salida de este comando tiene varios campos: usuario, identificador del proceso, porcentaje del CPU usado, porcentaje de la memoria utilizada, VSZ, RSS, terminal en donde se est'a llevando a cabo el proceso, estado (la ``T'' indica que los procesos est'an detenidos), hora de inicio, tiempo que lleva corriendo, comando que lo inici'o.
+		Como podemos observar, la salida de este comando tiene varios campos: usuario, identificador del proceso, porcentaje del CPU usado, porcentaje de la memoria utilizada, VSZ, RSS, terminal en donde se est'a llevando a cabo el proceso, estado (la \texttt{T} indica que los procesos est'an detenidos), hora de inicio, tiempo que lleva corriendo, comando que lo inici'o.
 
-		Los campos que nos interesan analizar son VSZ y RSS, relacionados con la memoria RAM. ```VSZ'' representa la ``Virtual Set Size'', que es la memoria RAM que hay disponible para llevar a cabo un proceso. Para calcularla, la m'aquina tiene en cuenta toda la memoria a la que el proceso podr'ia llegar a acceder: la que ocupan las bibliotecas din'amicas y la asignada (memoria que ocupan las variables utilizadas en un programa). %está bien esto?
+		Los campos que nos interesan analizar son \texttt{VSZ} y \texttt{RSS}, relacionados con la memoria RAM. \texttt{VSZ} hace referencia a la \textit{Virtual Set Size}, que es la memoria RAM que hay disponible para llevar a cabo un proceso. Para calcularla, la m'aquina tiene en cuenta toda la memoria a la que el proceso podr'ia llegar a acceder: la que ocupan las bibliotecas din'amicas y la asignada (memoria que ocupan las variables utilizadas en un programa). \\ %está bien esto? --> todo OK
 
-		\begin{table}[H]
-    			\centering
-    			\begin{tabular}{|c|}
-    			   	\hline VSZ = total\_bibliotecas\_dinamicas + total\_memoria\_asignada \\\hline
-		    	\end{tabular}
-    			\label{tab:my_label}
-		\end{table}
+		\centerline{\fbox{\texttt{VSZ} = \textit{total bibliotecas din'amicas} + \textit{total memoria asignada}}} \vspace{2pt}
 
-		Por otro lado, la RSS es la memoria RAM que el proceso ya ocup'o. Cuando se calcula se tienen en cuenta la memoria que ocupan las partes de las librer'ias din'amicas que ya fueron cargadas en la RAM y las partes de la memoria asignada que est'a en uso, es decir, s'olo considera los espacios de memoria que tienen valores. %de esto tampoco estoy segura
+		Por otro lado, la \texttt{RSS} es la memoria RAM que el proceso tiene en uso. Cuando se calcula se tienen en cuenta la memoria que ocupan las partes de las librer'ias din'amicas que ya fueron cargadas en la RAM y las partes de la memoria asignada que est'a en uso, es decir, s'olo considera los espacios de memoria que contienen informaci'on y est'en siendo utilizados por el programa. \\ %de esto tampoco estoy segura --> está OK, aclaré nada más apenas unas cositas
 
-		\begin{table}[H]
-    			\centering
-    			\begin{tabular}{|c|}
-        			 \hline RSS = bibliotecas\_dinamicas\_cargadas + memoria\_asignada\_usada \\\hline
-    			\end{tabular}
-    			\label{tab:my_label}
-		\end{table}
+		\centerline{\fbox{\texttt{RSS} = \textit{bibliotecas din'amicas cargadas} + \textit{memoria asignada usada}}} \vspace{2pt}
 
-		Volviendo a la pr'actica: la VSZ de \texttt{cos\_dinamicas} es de 1724 KB, mientras que la de \texttt{cos\_estaticas} es de s'olo 812 KB.
-Esta diferencia est'a en las bibliotecas din'amicas: al ser el mismo programa, ambos archivos tienen la misma cantidad de memoria asignada, por lo que, en lo 'unico que pueden diferir es en la memoria que ocupan las bibliotecas din'amicas (que en el caso de \texttt{cos\_estaticas} es igual a cero porque est'a enlazado est'aticamente).  
+		En la pr'actica: la \texttt{VSZ} de \texttt{cos\_dinamicas} es de 1724 KB, mientras que la de \texttt{cos\_estaticas} es de s'olo 812 KB.
+		La diferencia est'a en las bibliotecas din'amicas: al ser el mismo programa, ambos archivos tienen la misma cantidad de memoria asignada, por lo que en lo 'unico que pueden diferir es en la memoria que ocupan es en dichas bibliotecas (que en el caso de \texttt{cos\_estaticas} es igual a cero porque est'a enlazado est'aticamente).  
 
-		Gracias a estos datos, podemos confirmar que, al ser ejecutado, un programa enlazado din'amicamente ocupa m'as memoria RAM que uno con enlazado est'atico.
+		Gracias a estos datos, podemos confirmar que, al ser ejecutado, un programa enlazado din'amicamente ocupa m'as memoria RAM que uno enlazado est'aticamente.
 
 		Habiendo terminado, decidimos que ya ten'iamos conocimiento suficiente como para intentar compilar un programa usando \texttt{make}.
 
@@ -586,76 +581,76 @@ Esta diferencia est'a en las bibliotecas din'amicas: al ser el mismo programa, a
 			\end{code-box}
 			\imagecaption{fourth-ld-attempt}
 		\end{figure}
+	
 		
-		%%%%%%
 		\begin{figure}[H]
 			\centering
 			\begin{code-box}
-			    	\codetext{light-blue}{gcc }\codetext{orange-desert-vim}{--static -o circulo\_estatico }\codetext{light-red}{circulo.c}
-                
-                		\codetext{light-blue}{./circulo\_estatico}\newline
-                	
-                		\codetext{light-blue}{gcc }\codetext{orange-desert-vim}{-o circulo\_dinamico }\codetext{light-red}{circulo.c}
-                
-               			 \codetext{light-blue}{./circulo\_dinamico}
+				\codetext{light-blue}{gcc }\codetext{orange-desert-vim}{--static -o circulo\_estatico }\codetext{light-red}{circulo.c}
+				
+				\codetext{light-blue}{./circulo\_estatico}\newline
+				
+				\codetext{light-blue}{gcc }\codetext{orange-desert-vim}{-o circulo\_dinamico }\codetext{light-red}{circulo.c}
+				
+				\codetext{light-blue}{./circulo\_dinamico}
 			\end{code-box}
-			\imagecaption{andan}
+			\imagecaption{stat-dyn-prog2}
 		\end{figure}
 		
-    		\begin{figure}[H]
+		\begin{figure}[H]
 			\centering
 			\begin{code-box}
-			 	\codetext{light-blue}{file }\codetext{light-red}{circulo\_estatico}
-    
-               			\codetext{light-blue}{file }\codetext{light-red}{circulo\_dinamico}
-                
+				\codetext{light-blue}{file }\codetext{light-red}{circulo\_estatico}
+				
+				\codetext{light-blue}{file }\codetext{light-red}{circulo\_dinamico}
+				
 			\end{code-box}
 			\imagecaption{bien_enlazados}
 		\end{figure}
 		
-	   	 \begin{figure}[H]
+		\begin{figure}[H]
 			\centering
 			\begin{code-box}
 				\codetext{light-blue}{ls }\codetext{orange-desert-vim}{-l }\codetext{light-red}{circulo\_estatico circulo\_dinamico}
-            		\end{code-box}
+			\end{code-box}
 			\imagecaption{bytes_circulos}
 		\end{figure}
-	
-    		\begin{figure}[H]
+		
+		\begin{figure}[H]
 			\centering
 			\begin{code-box}
 				\codetext{light-blue}{gcc }\codetext{orange-desert-vim}{--static -o cos\_estaticas }\codetext{light-red}{cosas\_innecesarias.c}
-        
-                  		\codetext{light-blue}{file }\codetext{light-red}{cos\_estaticas}\newline
-    
-                		\codetext{light-blue}{gcc }\codetext{orange-desert-vim}{-o cos\_dinamicas }\codetext{light-red}{cosas\_innecesarias.c}
-
-                		\codetext{light-blue}{file }\codetext{light-red}{cos\_dinamicas}
+				
+				\codetext{light-blue}{file }\codetext{light-red}{cos\_estaticas}\newline
+				
+				\codetext{light-blue}{gcc }\codetext{orange-desert-vim}{-o cos\_dinamicas }\codetext{light-red}{cosas\_innecesarias.c}
+				
+				\codetext{light-blue}{file }\codetext{light-red}{cos\_dinamicas}
 			\end{code-box}
 			\imagecaption{innecesario}
 		\end{figure}
-    
-    		\begin{figure}[H]
+		
+		\begin{figure}[H]
 			\centering
 			\begin{code-box}
 				\codetext{light-blue}{./cos\_estaticas}
-			    
-                		\qquad\codetext{orange-desert-vim}{[Ctrl + Z]}\newline
-                
-                		\codetext{light-blue}{./cos\_dinamicas}
-                
-                 		\qquad\codetext{orange-desert-vim}{[Ctrl + Z]}
+				
+				\qquad\codetext{orange-desert-vim}{[Ctrl + Z]}\newline
+				
+				\codetext{light-blue}{./cos\_dinamicas}
+				
+				\qquad\codetext{orange-desert-vim}{[Ctrl + Z]}
 			\end{code-box}
 			\imagecaption{detenidos}
 		\end{figure}
-
-     		\begin{figure}[H]
-        		\centering
-        		\begin{code-box}
-            			\codetext{light-blue}{ps }\codetext{orange-desert-vim}{auxT}
-        		\end{code-box}
-        	\imagecaption{ps}
-    		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\begin{code-box}
+				\codetext{light-blue}{ps }\codetext{orange-desert-vim}{auxT}
+			\end{code-box}
+			\imagecaption{ps}
+		\end{figure}
 		
 		\begin{figure}[H]
 			\centering
@@ -743,7 +738,7 @@ Esta diferencia est'a en las bibliotecas din'amicas: al ser el mismo programa, a
 			\imagecaption{test_w3m}
 		\end{figure} 
 
-	\section{Archivos generados}
+	\section{Archivos generados} \label{sec:archivos_generados}
 		 A continuaci'on se encuentran todos los archivos que creamos para hacer este trabajo, correspondientes a las im'agenes presentadas.
 
 		\lstset{style=mystyle}
